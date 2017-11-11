@@ -9,6 +9,12 @@
             echo "Homes is alive at ".date("d-M-Y h:i:s");
             exit();
         }
+
+        public function index()
+        {
+            $this -> layout = "main";
+        }
     }
 
+    
 ?>
