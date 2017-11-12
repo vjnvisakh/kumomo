@@ -2,7 +2,7 @@
   <br>
   <div class="row">
     <div class="col-lg-3">
-      <a href=""><h3>Khaskhobor.in</h3></a>
+      <a href=""><h3>Khashkhabor.in</h3></a> <?php //TANUSHREE - KM1#COMMIT#2 - Corrected the website name ?> 
       <p>Your news corner</p>
     </div>
 

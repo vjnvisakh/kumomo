@@ -30,5 +30,29 @@ App::uses('Controller', 'Controller');
  * @package		app.Controller
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller {
+
+	
+class AppController extends Controller 
+{
+	//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables, Added the getNavbar function
+    public $name = "App";
+    public $uses = array("Category", "User", "Feedback", "Ad", "Article");
+	
+	/**
+	 * This method returns the list of navbar links from the database
+	 *
+	 * @return array of Navbar links
+	 */
+
+    public function getNavbar()
+    {
+        $navbarQuery = "";
+        $navbarQuery .= "SELECT parent_id, title, link, position FROM categories";
+        $navbarQuery .= " WHERE status = 'active' order by parent_id, position";
+
+        $navbarResult = $this -> Category -> query($navbarQuery);
+
+        return $navbarResult;
+	}
+	//-TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables, Added the getNavbar function
 }

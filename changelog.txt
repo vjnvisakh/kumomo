@@ -1,0 +1,11 @@
+TANUSHREE
+
+/** KM#1COMMIT#2
+* created the changelog file
+* app/Controller/AdminsController - Added the skeleton for setNavbar() function, Set the name variable
+* app/Controller/AppController - Set the name, uses variable. Added the getNavbar() function
+* app/Controller/AppController - Set the name, uses variable. Added header in the index function. Getting the navbar elements from getNavbar()
+* app/View/Admins/set_navbar.ctp - Made the skeleton of the file
+* app/View/Homes/index.ctp - Corrected the website name
+* app/View/Layouts/main.ctp - Changed the meta tag
+*/

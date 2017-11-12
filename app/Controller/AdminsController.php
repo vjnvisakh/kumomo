@@ -4,6 +4,7 @@
 
     class AdminsController extends AppController
     {
+        public $name = "Admins"; //TANUSHREE - KM#1COMMIT#2 - Set the name variable
         public $uses = array("User");
 
         public function isAlive()
@@ -61,6 +62,29 @@
                 )
             );
         }
+
+        //+TANUSHREE - KM1#COMMIT#2 - Storing the navbar elements into the database
+        /**
+         * Stores the navbar links into the database
+         *
+         * @return void
+         * @throws NotFoundException When the view file could not be found
+         *	or MissingViewException in debug mode.
+        */
+
+        public function setNavbar()
+        {
+            if(!empty($_POST["navbarJSON"]))
+            {
+
+            }
+            else 
+            {
+                $existingNavbarElements = $this -> getNavbar();
+                $this -> set("existingNavbarElements", $existingNavbarElements);
+            }
+        }
+        //-TANUSHREE - KM1#COMMIT#2 - Storing the navbar elements into the database
     }
 
 ?>
