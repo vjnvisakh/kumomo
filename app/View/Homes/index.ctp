@@ -1,23 +1,43 @@
-<div class="container-fluid" style="background:#f8f8f8">
-  <br>
-  <div class="row">
-    <div class="col-lg-3">
-      <a href=""><h3>Khashkhabor.in</h3></a> <?php //TANUSHREE - KM1#COMMIT#2 - Corrected the website name ?> 
-      <p>Your news corner</p>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 
-    <div class="col-lg-9" style="text-align:right">
-      <ul style="list-style-type:none">
-        <li>Home</li>
-        <li>About Us</li>
-        <li>Khashkhabor</li>
-        <li>Advertisement</li>
-        <li>Contact</li>
-      </ul>
-    </div>
+	<style>
+		
+		::-webkit-scrollbar 
+		{ 
+    		display: none; 
+		}
+
+	</style>
+
+
+</head>
+<body style="height:1500px;margin:5%">
+
+<div class="container-fluid">  
+  <div class="row" style="padding:2%;border:1px solid #222">
+	<div class="col-lg-4">
+		<h3>Khaskhobor.in</h3>
+	</div>
+	<div class="col-lg-6 text-center">
+		<a href="#">Home</a> |
+		<a href="#">About Us</a> |
+		<a href="#">Khaskhobor</a> |
+		<a href="#">Advertisement</a> |
+		<a href="#">Contact</a>
+	</div>
+	<div class="col-lg-2">
+
+	</div>
   </div>
-
-  <br />
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
@@ -32,65 +52,104 @@
   </ul>
 </nav>
 
+
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-3">
-      Left ad space
-    </div>
-    
-    <!-- THE CENTER SCREEN -->
-    <div class="col-lg-6">      
-        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-          <!-- Indicators -->
-          <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-          </ol>
 
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner">
+	<div class="row">
+	<!-- THE LEFT AD PANEL -->
+		<div class="col-lg-2" style="border:1px solid #222;padding:5%">
+			<h3>
+				AD SPACE 1
+			</h3>
+		</div>
+	<!-- THE LEFT AD PANEL -->
 
-            <div class="item active">
-              <img src="<?=$this->webroot.'images/la.jpg'?>" alt="Los Angeles" style="width:100%;">
-              <div class="carousel-caption">
-                <h3>Los Angeles</h3>
-                <p>LA is always so much fun!</p>
-              </div>
-            </div>
 
-            <div class="item">
-              <img src="<?=$this->webroot.'images/chicago.jpg'?>" alt="Chicago" style="width:100%;">
-              <div class="carousel-caption">
-                <h3>Chicago</h3>
-                <p>Thank you, Chicago!</p>
-              </div>
-            </div>
-          
-            <div class="item">
-              <img src="<?=$this->webroot.'images/ny.jpg'?>" alt="New York" style="width:100%;">
-              <div class="carousel-caption">
-                <h3>New York</h3>
-                <p>We love the Big Apple!</p>
-              </div>
-            </div>
-        
-          </div>
+	<!-- THE CENTER PANEL -->
+		<div class="col-lg-7 text-center"style="border:1px solid #222;padding:5%">
+			<h3>
+				COVER PIC
+			</h3>
+		</div>
+	<!-- THE CENTER PANEL -->
 
-          <!-- Left and right controls -->
-          <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div>      
-    </div>
-    
-    <div class="col-lg-3">
-      Right Ad space
-    </div>
-  </div>
+
+	<!-- THE RIGHT DETAILS PANEL -->
+		<div class="col-lg-3">
+
+				<!-- THE DETAILS BOX -->
+				<div class="row" style="background:#E4E4E4;padding-top:5%;">					
+					<ul style="list-style-type:none">
+						<h4>Get in Touch</h4>
+						<li>Home</li>
+						<li>About Us</li>
+						<li>Khaskhobor</li>
+						<li>Advertisement</li>
+						<li>Contact</li>
+					</ul>
+				</div>
+				<!-- THE DETAILS BOX -->			
+
+		</div>
+	<!-- THE RIGHT DETAILS PANEL -->
+	</div>
+
+
+	<br />
+	<div class="row">
+
+			<div class="col-lg-9" style="border:1px solid #222">
+				<div class="row" style="padding:2%">
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+				</div>
+			</div>
+
+			<!-- THE RIGHT SIDE AD -->
+			<div class="col-lg-3" style="border:1px solid #222;padding:5%">
+				<h3>
+					AD SPACE 2
+				</h3>
+			</div>
+			<!-- THE RIGHT SIDE AD -->
+
+	</div>
+
+	<br />
+	<!-- THE NEWS IN BRIEF  -->
+	<div class="row">
+		<div class="col-lg-9" style="border:1px solid #222;padding:3%">
+			<div class="row" style="border:1px solid #222;margin-bottom:1%">				
+				<div class="col-lg-2" style="border:1px solid #222;padding:5%">PIC</div>
+				<div class="col-lg-10" style="border:1px solid #222;padding:5%">Content</div>
+			</div>
+			<div class="row" style="border:1px solid #222;margin-bottom:1%">				
+				<div class="col-lg-2" style="border:1px solid #222;padding:5%;">PIC</div>
+				<div class="col-lg-10" style="border:1px solid #222;padding:5%">Content</div>
+			</div>
+			<div class="row" style="border:1px solid #222">				
+				<div class="col-lg-2" style="border:1px solid #222;padding:5%">PIC</div>
+				<div class="col-lg-10" style="border:1px solid #222;padding:5%">Content</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">
+				<h3>
+					AD SPACE 3
+				</h3>
+		</div>
+	</div>
+	<!-- THE NEWS IN BRIEF  -->
+	
+	<br />
+	<div class="row" style="padding:5%;background:#222;color:#eee">
+		<h3>Footer</h3>
+	</div>
+
 </div>
