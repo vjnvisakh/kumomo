@@ -20,7 +20,7 @@
 
 
 </head>
-<body style="height:1500px;margin:5%">
+<body style="height:1500px;margin:3%">
 
 <div class="container-fluid">  
   <div class="row" style="padding:2%;border:1px solid #222">

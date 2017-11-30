@@ -36,7 +36,7 @@ class AppController extends Controller
 {
 	//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables, Added the getNavbar function
     public $name = "App";
-    public $uses = array("Category", "User", "Feedback", "Ad", "Article");
+    public $uses = array("Category", "User", "Feedback", "Ad", "Article", "ArticlesToCategory");
 	
 	/**
 	 * This method returns the list of navbar links from the database
@@ -47,12 +47,56 @@ class AppController extends Controller
     public function getNavbar()
     {
         $navbarQuery = "";
-        $navbarQuery .= "SELECT parent_id, title, link, position FROM categories";
+        $navbarQuery .= "SELECT id, parent_id, title, link, position FROM categories";
         $navbarQuery .= " WHERE status = 'active' order by parent_id, position";
 
         $navbarResult = $this -> Category -> query($navbarQuery);
 
         return $navbarResult;
 	}
-	//-TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables, Added the getNavbar function
+    //-TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables, Added the getNavbar function
+    
+    protected function uploadPhoto($photo, $folderName)
+	{
+		ini_set("memory_limit", "-1");
+  		set_time_limit(0);
+		
+		if(empty($photo)) 
+		{
+			return "";
+		}
+
+		$photoData = array();
+		$typesArray = array
+		(
+			"jpg", "jpeg", "gif", "png", "bmp", "webp"
+		);
+
+        if(!empty($photo["error"])) 
+        {
+            return "";
+        }
+                            
+        $fileParts = pathinfo($photo["name"]);
+        if(!in_array(strtolower($fileParts["extension"]), $typesArray)) 
+        {
+            return "";
+        }
+
+        $imageType = $photo["type"];
+        $extensionArray = explode(".", $photo["name"]);
+		$extension = array_pop($extensionArray);
+            
+        $fileName = "kk_" . base64_encode(microtime()) . "_" . rand(1, 10000) . "." . $extension;
+
+		$uploadTarget = "images/" . $folderName . "/";
+        $uploadTarget = $uploadTarget . $fileName;
+        
+        if(move_uploaded_file($photo["tmp_name"], $uploadTarget)) 
+        {
+            return $fileName;
+        }
+
+        return "";
+	}
 }

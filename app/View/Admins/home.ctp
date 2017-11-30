@@ -10,7 +10,14 @@
   <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
   <script src="https://use.fontawesome.com/9f1ff0ac9a.js"></script>
+    <style>
+		
+		::-webkit-scrollbar 
+		{ 
+    		display: none; 
+		}
 
+    </style>
 
 
     <script>
@@ -18,13 +25,55 @@
         $(document).ready(function()
         {            
             loadAllArticles();
+            loadAllAdvertisements();
+            loadStats();
 
-            $("#bpublish").click(function()
+			$("#bpublish").click(function()
+			{
+				var articleDetails = {};
+				
+				articleDetails["title"] = $("#ttitle").val();
+				articleDetails["content"] = $("#ttext").val();
+				articleDetails["categories"] = [];
+				articleDetails["caption"] = $("#tcaption").val();
+
+				$("#tcat :selected").each(function()
+				{
+        			articleDetails["categories"].push($(this).val()); 
+    			});
+
+				var articleJSON = JSON.stringify(articleDetails);
+
+				var articleData = new FormData($("#articleFileUpload")[0]);    
+				articleData.append("articleJSON", articleJSON);
+
+				$.ajax
+				(
+					{
+						type:"POST",
+						data: articleData,
+						contentType: false,
+						processData: false,
+						url: <?=json_encode($this->webroot.'Admins/addArticle');?>,
+						success: function (res) 
+						{
+							console.log(res);
+							loadAllArticles();
+						},
+						error: function()
+						{
+							
+						}
+					}
+				);
+			});
+
+            $("#badvert").click(function()
             {
-                var ttitle = $("#ttitle").val();
-                var tcat = $("#tcat").val();
-                var ttext = $("#ttext").val();
-                //var ttitle = $("#tpic").val();                
+                var talt = $("#talt").val();
+                var tlink = $("#tlink").val();
+                var tpos = $("#tsel").val();
+                //var ttitle = $("#tpic").val();           
 
                 $.ajax
                 (
@@ -32,15 +81,14 @@
                         type:"POST",
                         data:
                         {					
-                            ttitle:ttitle,
-                            tcat:tcat,
-                            ttext:ttext                            
+                            talt:talt,
+                            tlink:tlink,
+                            tpos:tpos                            
                         },
-                        url: <?=json_encode($this->webroot.'Admins/addArticle');?>,
+                        url: <?=json_encode($this->webroot.'Admins/addAdvertisement');?>,
                         success: function (res) 
                         {
-                            console.log(res);
-                            loadAllArticles();
+                            loadAllAdvertisements();                                                     
                         },
                         error: function()
                         {
@@ -74,9 +122,57 @@
                         }
                     }
                 );
-            }
+            }            
 
+            function  loadAllAdvertisements()
+            {
+                $.ajax
+                (
+                    {
+                        type:"POST",
+                        data:
+                        {					
+                            
+                        },
+                        url: <?=json_encode($this->webroot.'Admins/getAllAdvertisements');?>,
+                        success: function (res) 
+                        {
+                            $("#adTbody").html(JSON.parse(res));
+                            // To generate the datatable
+                            $("#tab_advert").DataTable();
+                            // To generate the datatable
+                        },
+                        error: function()
+                        {
+                            
+                        }
+                    }
+                );
+            }
             
+            function loadStats()
+            {
+                $.ajax
+                (
+                    {
+                        type:"POST",
+                        data:
+                        {					
+                            
+                        },
+                        url: <?=json_encode($this->webroot.'Admins/stats');?>,
+                        success: function (res) 
+                        {
+                            console.log(JSON.parse(res));
+                            $("#summary").html(JSON.parse(res));
+                        },
+                        error: function()
+                        {
+                            
+                        }
+                    }
+                );
+            }
 
         });
     
@@ -85,26 +181,32 @@
 
 
 </head>
-<body style="padding:4%">
+<body style="padding:4%;background:#eee">
 
-<div class="container-fluid" style="border:1px solid #222">
+<div class="container-fluid" style="border:1px solid #222;background:#fff">
   
-  <div class="row" style="padding:2%">
-    <h3>Administrator</h3>
-    <p>This is your primary dashboard. All your settings can be tweaked over here</p>
+  <div class="row" style="padding:2%;background:#286090;color:#fff">    
+    <a href="<?=$this->webroot?>Admins/logout"><button class="btn btn-primary btn-sm" style="float:right">Logout</button></a>
+    <a href="#"><button class="btn btn-primary btn-sm" style="float:right"><i class="fa fa-cogs" aria-hidden="true"></i></button></a>
+    <h2><b>Administrator</b></h2>
+    <p><small>This is your primary dashboard. All your settings can be tweaked over here</small></p>
   </div>
+  <br />
 
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-    <li><a data-toggle="tab" href="#menu1">Articles</a></li>
-    <li><a data-toggle="tab" href="#menu2">Advertisements</a></li>
-    <li><a data-toggle="tab" href="#menu3">Enquiries</a></li>
+    <li class="active"><a data-toggle="tab" style="border:0px" href="#home">Statistics</a></li>
+    <li><a data-toggle="tab" style="border:0px" href="#menu1">Articles</a></li>
+    <li><a data-toggle="tab" style="border:0px" href="#menu2">Advertisements</a></li>
+    <li><a data-toggle="tab" style="border:0px" href="#menu3">Enquiries</a></li>
   </ul>
 
   <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <div id="home" class="tab-pane fade in active" style="padding:2%">
+      <h3>Statistics</h3>
+      <p>A summary of your entire website</p>
+      <div id="summary">
+      
+      </div>
     </div>
 
     <!-- ARTICLES MENU -->
@@ -114,19 +216,36 @@
         <!-- SHOW THE ADD NEW ARTICLE -->
         <div class="row">
             <div class="col-lg-12">
-            <button data-toggle="collapse" data-target="#demo">New Article</button>
+            <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#demo">New Article</button>
 
             <div id="demo" class="collapse" style="border-bottom:1px solid #eee">
                 <br />
                 <div class="row" style="margin-bottom:3%">
-                    <div class="col-lg-4">
+					<div class="col-lg-4 form-group">
                         <input id="ttitle" type="text" class="form-control" placeholder="Title of the article" /><br />
-                        <input id="tcat" type="text" class="form-control" placeholder="Category to which it belongs" /><br />
-                        <input id="tpic" type="file" placeholder="Category to which it belongs" />                                                
+						<!-- <input id="tcat" type="text" class="form-control" placeholder="Category to which it belongs" /><br /> -->
+						<select id="tcat" class="form-control" name="tcat" multiple>
+<?php
+						foreach($categories as $category)
+						{
+?>
+							<option id=<?=$category["categories"]["id"]?> value=<?=$category["categories"]["id"]?>>
+								<?=$category["categories"]["title"]?>
+							</option>
+<?php
+						}
+?>
+						</select>
+						<br>
+						<!-- <input id="tpic" type="file" placeholder="Category to which it belongs" />    -->
+						<form name="articleFileUpload" id="articleFileUpload" enctype="multipart/form-data" method="post" action="">
+							<input type="file" name="tpic" id="tpic" /> 
+						</form> 
+						<input id="tcaption" type="text" class="form-control" placeholder="Caption for the photo" /><br />                                            
                     </div>
                     <div class="col-lg-8">
-                        <textarea id="ttext" cols="20" rows="10" class="form-control"></textarea><br />
-                        <button id="bpublish" type="button" class="btn btn-default">Publish</button>
+						<textarea id="ttext" cols="20" rows="10" class="form-control" placeholder="Content goes here.."></textarea><br />
+                        <button id="bpublish" type="button" class="btn btn-primary btn-sm">Publish</button>
                     </div>
                 </div>
             </div>
@@ -159,10 +278,58 @@
     </div>
     <!-- ARTICLES MENU -->
 
-    <div id="menu2" class="tab-pane fade">
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    <!-- ADVERTISEMENTS MENU -->
+    <div id="menu2" class="tab-pane fade" style="padding:2%">              
+        
+        <!-- SHOW THE ADD NEW Advertisement -->
+        <div class="row">
+            <div class="col-lg-3" style="padding:2%">   
+                <h3>Add New</h3>                                         
+                <input id="talt" type="text" class="form-control" placeholder="Alt Text" style="margin-bottom:1%" />
+                <input id="tlink" type="text" class="form-control" placeholder="Link to open" style="margin-bottom:1%" />
+                <select class="form-control" id="tsel">
+                    <option value="1">Space 1</option>
+                    <option value="2">Space 2</option>
+                    <option value="3">Space 3</option>
+                    <option value="4">Space 4</option>
+                </select><br />
+                <input type="file" /><br/>
+                <button id="badvert" type="button" class="btn btn-primary btn-sm">Upload</button>                                
+            </div>    
+
+            <div class="col-lg-9" style="padding:2%">
+                <!-- THE TABLE OF ARTICLES -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3>Active Advertisements</h3>
+                        <p>This is the list of all your Advertisements on the website</p>
+                        <table id="tab_advert" class="table table-bordered table-condensed table-striped">
+                            <thead>
+                                <th>Id</th>
+                                <th>Alt</th>                                
+                                <th>Link</th>
+                                <th>Picture</th>
+                                <th>Position</th>                                
+                                <th>Clicks</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody id="adTbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- THE TABLE OF ADS -->
+            </div>        
+        </div>
+        <!-- SHOW THE ADD NEW ARTICLE -->
+
+        
     </div>
+    <!-- ADVERTISEMENTS MENU -->
+
+
     <div id="menu3" class="tab-pane fade">
       <h3>Menu 3</h3>
       <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>

@@ -5,7 +5,7 @@
     class AdminsController extends AppController
     {
         public $name = "Admins"; //TANUSHREE - KM#1COMMIT#2 - Set the name variable
-        public $uses = array("Article");
+        public $uses = array("Article","Ad","User","Category","ArticlesToCategory");
 
         public function isAlive()
         {
@@ -16,7 +16,7 @@
         // LOGIN PAGE OF THE ADMIN
         public function index()
         {
-            $this -> layout = "main_admin";
+            $this -> layout = "";
         }
 
         // CHECKING THE LOGINS
@@ -28,8 +28,8 @@
 
             if(!empty($requestData))
             {
-                $userName = $requestData["userName"];
-                $passWord = $requestData["passWord"];
+                $userName = $requestData["user"];
+                $passWord = $requestData["pass"];
 
                 $userDetails = $this -> User -> find
                 (
@@ -44,11 +44,17 @@
                     )
                 );
                 
-                $this -> log($userDetails,LOG_DEBUG);
+                if(!empty($userDetails))
+                {
+                    $this -> redirect(array("action" => "home"));
+                }
+                else 
+                {
+                    $this -> redirect(array("action" => "index"));    
+                }                
             }
-
-            $this -> log("AdminsController -> login() -> END:".microtime(true),LOG_DEBUG);
-            exit();
+            
+            $this -> log("AdminsController -> login() -> END:".microtime(true),LOG_DEBUG);            
         }
 
         // CHECKING THE LOGOUTS
@@ -58,7 +64,8 @@
             (
                 array
                 (
-                    "controller" => "admins"
+                    "controller" => "admins",
+                    "action" => "index"
                 )
             );
         }
@@ -67,6 +74,9 @@
         public function home()
         {
             $this -> layout = "";
+
+            $categories = $this -> getNavbar();
+            $this -> set("categories", $categories);
         }
 
         // THIS IS USED TO CHECK IF THE ADMIN IS LOGGED IN OR NOT
@@ -97,8 +107,16 @@
                     $tablerows .= "<td>".$row."</td>";
                     $tablerows .= "<td>".$article["articles"]["title"]."</td>";
                     $tablerows .= "<td>".$article["articles"]["created_by"]."</td>";
-                    $tablerows .= "<td>".substr($article["articles"]["content"],0,70).". . .</td>";    
-                    $tablerows .= "<td>".$article["articles"]["photo"]."</td>";
+                    $tablerows .= "<td>".substr($article["articles"]["content"],0,70).". . .</td>"; 
+                    if(!empty($article["articles"]["photo"]))
+                    {
+                        $tablerows .= "<td><a href='" . $this -> webroot . "images/articles/";
+                        $tablerows .= $article["articles"]["photo"] . "'target=_blank>Click here to view image</a></td>";
+                    } 
+                    else 
+                    {
+                        $tablerows .= "<td>No image was attached</td>";
+                    }
                     $tablerows .= "<td>".$article["articles"]["created"]."</td>";
                     $tablerows .= "<td>".ucfirst($article["articles"]["status"])."</td>";
                     $tablerows .= "<td><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-pencil' aria-hidden='true'></i></a> </td>";
@@ -122,19 +140,53 @@
         {
             $this -> log("AdminsController -> addArticle() -> START:".microtime(true),LOG_DEBUG);
             $requestData = $this -> request -> data;
-            $this -> log($requestData,LOG_DEBUG);
+            $this -> log($requestData,  LOG_DEBUG);
+            $this -> log($_FILES, LOG_DEBUG);
 
             if(!empty($requestData))
             {
-                $title = $requestData["ttitle"];
-                $category = $requestData["tcat"];
-                $pic = $requestData["tpic"];
-                $content = $requestData["ttext"];
+                $articleData = json_decode($requestData["articleJSON"], true);
+                
+                $title = $articleData["title"];
+                $categories = $articleData["categories"];
+                $content = $articleData["content"];
+                $caption = $articleData["caption"];
 
-                $insertArticle  = "";
-                $insertArticle .= " INSERT INTO articles(title,content,photo,status,created_by,created,modified)";
-                $insertArticle .= " VALUES('".$title."','".$content."','".$pic."','active',1,'".date("Y-m-d")."','".date("Y-m-d")."')";
-                $this -> Article -> query($insertArticle);
+                $article["Article"]["title"] = $title;
+                $article["Article"]["content"] = $content;
+
+                $article["Article"]["photo"] = $this -> uploadPhoto($_FILES["tpic"], "articles");
+                $article["Article"]["photo_caption"] = $caption;
+
+                $article["Article"]["created_by"] = 1;
+                $article["Article"]["created"] = date("Y-m-d");
+                $article["Article"]["modified"] = date("Y-m-d");
+
+                $this -> log($article, LOG_DEBUG);
+                
+                $this -> Article -> create();
+                $this -> Article -> save($article);
+
+                $articleId = $this -> Article -> id;
+
+                $index = 0;
+
+                foreach($categories as $categoryId)
+                {
+                    $aToC[$index]["ArticlesToCategory"]["article_id"] = $articleId;
+                    $aToC[$index]["ArticlesToCategory"]["category_id"] = $categoryId;
+
+                    $index++;
+                }
+
+                $this -> ArticlesToCategory -> create();
+                $this -> ArticlesToCategory -> saveMany($aToC);
+
+
+                // $insertArticle  = "";
+                // $insertArticle .= " INSERT INTO articles(title,content,photo,status,created_by,created,modified)";
+                // $insertArticle .= " VALUES('".$title."','".$content."','".$pic."','active',1,'".date("Y-m-d")."','".date("Y-m-d")."')";
+                // $this -> Article -> query($insertArticle);
 
                 echo json_encode(1);
             }
@@ -143,6 +195,111 @@
                 
             }
             $this -> log("AdminsController -> addArticle() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+        
+
+        // ADD AN ADVERTISEMENT
+        public function addAdvertisement()
+        {
+            $this -> log("AdminsController -> addAdvertisement() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+            $this -> log($requestData,LOG_DEBUG);
+
+            if(!empty($requestData))
+            {
+                $talt = $requestData["talt"];
+                $tlink = $requestData["tlink"];
+                $tpos = $requestData["tpos"];
+                //$tpic = $requestData["tpic"];
+                $tpic = '';
+
+                $insertAd  = "";
+                $insertAd .= " INSERT INTO ads(alt,photo,link,clicks,position,status,created,modified)";
+                $insertAd .= " VALUES('".$talt."','".$tpic."','".$tlink."',0,$tpos,'active','".date("Y-m-d")."','".date("Y-m-d")."')";
+                $this -> Ad -> query($insertAd);
+
+                echo json_encode(1);
+            }
+            else 
+            {
+                
+            }
+
+            $this -> log("AdminsController -> addAdvertisement() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        // THIS ACTION GETS ALL THE ADVERTISEMENTS IN THE DATABASE FOR THE ADMIN
+        public function getAllAdvertisements()
+        {
+            $this -> log("AdminsController -> getAllAdvertisements() -> START:".microtime(true),LOG_DEBUG);
+
+            if($this->isLoggedIn())
+            {
+                $getAllAdvertisements  = "";
+                $getAllAdvertisements .= " SELECT * FROM ads ORDER BY ID DESC";
+                $allAdvertisements = $this -> Ad -> query($getAllAdvertisements);
+
+                $this -> log($allAdvertisements,LOG_DEBUG);
+
+                $tablerows = "";
+                $row = 1;
+
+                foreach($allAdvertisements as $advertisement)
+                {
+                    $tablerows .= "<tr>";
+                    $tablerows .= "<td>".$row."</td>";
+                    $tablerows .= "<td>".$advertisement["ads"]["alt"]."</td>";
+                    $tablerows .= "<td><a target='blank' href='".$advertisement["ads"]["link"]."'>".$advertisement["ads"]["link"]."</a></td>";    
+                    $tablerows .= "<td>".$advertisement["ads"]["photo"]."</td>";
+                    $tablerows .= "<td>".$advertisement["ads"]["position"]."</td>";
+                    $tablerows .= "<td>".$advertisement["ads"]["clicks"]."</td>";                    
+                    $tablerows .= "<td>".ucfirst($advertisement["ads"]["status"])."</td>";
+                    $tablerows .= "<td>".$advertisement["ads"]["created"]."</td>";                    
+                    $tablerows .= "<td><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-pencil' aria-hidden='true'></i></a> </td>";
+                    $tablerows .= "</tr>";
+                    $row++;
+                }
+
+                echo json_encode($tablerows);
+            }
+            else 
+            {
+                
+            }
+
+            $this -> log("AdminsController -> getAllAdvertisements() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        // TO GET THE STATISTICS 
+        public function stats()
+        {
+            $this -> log("AdminsController -> stats() -> START:".microtime(true),LOG_DEBUG);
+
+            if($this->isLoggedIn())
+            {
+                $models = ["Article","Ad","Category","User"];
+                $counters[0] = 'SELECT count(id) cnt FROM articles';
+                $counters[1] = 'SELECT count(id) cnt FROM ads';
+                $counters[2] = 'SELECT count(id) cnt FROM categories';
+                $counters[3] = 'SELECT count(id) cnt FROM users';                
+
+                for($i=0;$i<4;$i++)
+                {
+                    $counters[$i] = $this -> $models[$i] -> query($counters[$i]);
+                }
+
+                $this -> log($counters,LOG_DEBUG);
+                echo json_encode($counters);
+            }
+            else 
+            {
+                $this -> redirect(array("action" => "index"));    
+            }
+
+            $this -> log("AdminsController -> stats() -> END:".microtime(true),LOG_DEBUG);
             exit();
         }
     }

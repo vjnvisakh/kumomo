@@ -1,10 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Article Model
+ * Feedback Model
  *
  */
-class Article extends AppModel {
+class Feedback extends AppModel {
 
 /**
  * Validation rules
@@ -12,7 +12,7 @@ class Article extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'content' => array(
+		'comments' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
@@ -22,9 +22,19 @@ class Article extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'created_by' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
+		'name' => array(
+			'notBlank' => array(
+				'rule' => array('notBlank'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'email' => array(
+			'email' => array(
+				'rule' => array('email'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
