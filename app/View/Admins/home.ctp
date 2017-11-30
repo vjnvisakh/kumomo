@@ -21,12 +21,16 @@
 
 
     <script>
-    
+
+
+        var parentId = 0;
+
         $(document).ready(function()
         {            
             loadAllArticles();
             loadAllAdvertisements();
             loadStats();
+            loadCategories();
 
 			$("#bpublish").click(function()
 			{
@@ -44,7 +48,7 @@
 
 				var articleJSON = JSON.stringify(articleDetails);
 
-				var articleData = new FormData($("#articleFileUpload")[0]);    
+				var articleData = new FormData($("#articleFileUpload")[0]);
 				articleData.append("articleJSON", articleJSON);
 
 				$.ajax
@@ -97,6 +101,65 @@
                     }
                 );
             });
+
+            $("#bcat").click(function()
+            {
+                var title = $("#cat_name").val();
+                
+                $.ajax
+                (
+                    {
+                        type:"POST",
+                        data:
+                        {					
+                            title:title,
+                            parent:0
+                        },
+                        url: <?=json_encode($this->webroot.'Admins/addCategory');?>,
+                        success: function (res) 
+                        {
+                            $("#cat_name").val('');
+                            loadCategories();
+                        },
+                        error: function()
+                        {
+                            
+                        }
+                    }
+                );
+            });            
+
+            $("#bsubcat").click(function()
+            {
+                var title = $("#sub_cat_name").val();
+                
+                $.ajax
+                (
+                    {
+                        type:"POST",
+                        data:
+                        {					
+                            title:title,
+                            parent:parentId
+                        },
+                        url: <?=json_encode($this->webroot.'Admins/addCategory');?>,
+                        success: function (res) 
+                        {
+                            $("#sub_cat_name").val('');
+                            getAllSubCategories(parentId);
+                        },
+                        error: function()
+                        {
+                            
+                        }
+                    }
+                );
+            });
+
+
+            
+            
+
 
             function  loadAllArticles()
             {
@@ -174,8 +237,114 @@
                 );
             }
 
+
+            
+
+            
         });
-    
+        
+
+        function loadCategories()
+        {
+            $.ajax
+            (
+                {
+                    type:"POST",
+                    data:
+                    {					
+                        
+                    },
+                    url: <?=json_encode($this->webroot.'Admins/getAllCategories');?>,
+                    success: function (res) 
+                    {
+                        $("#cat_load").html(JSON.parse(res));
+                    },
+                    error: function()
+                    {
+                        
+                    }
+                }
+            );
+        }
+
+        // TO ADD A NEW SUB CATEGORY
+        function getAllSubCategories(id)
+        {
+            parentId = id;
+            $("#div_sub").show();
+
+            $.ajax
+            (
+                {
+                    type:"POST",
+                    data:
+                    {					
+                        id:id
+                    },
+                    url: <?=json_encode($this->webroot.'Admins/getAllSubCategories');?>,
+                    success: function (res) 
+                    {
+                        $("#sub_cat_load").html(JSON.parse(res));
+                    },
+                    error: function()
+                    {
+                        
+                    }
+                }
+            );
+        }
+
+        // TO DELETE A CATEGORY
+        function delCat(id)
+        {                        
+            $.ajax
+            (
+                {
+                    type:"POST",
+                    data:
+                    {					
+                        id:id
+                    },
+                    url: <?=json_encode($this->webroot.'Admins/deleteCategory');?>,
+                    success: function (res) 
+                    {
+                        loadCategories();
+                        $("#div_sub").hide();
+                    },
+                    error: function()
+                    {
+                        
+                    }
+                }
+            );
+        }
+
+
+        // TO DELETE A SUB-CATEGORY
+        function delSubCat(id)
+        {                        
+            $.ajax
+            (
+                {
+                    type:"POST",
+                    data:
+                    {					
+                        id:id
+                    },
+                    url: <?=json_encode($this->webroot.'Admins/deleteCategory');?>,
+                    success: function (res) 
+                    {
+                        getAllSubCategories(parentId);
+                    },
+                    error: function()
+                    {
+                        
+                    }
+                }
+            );
+        }
+
+
     </script>
 
 
@@ -194,20 +363,55 @@
   <br />
 
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" style="border:0px" href="#home">Statistics</a></li>
+    <li class="active"><a data-toggle="tab" style="border:0px" href="#home">Statistics</a></li>    
+    <li><a data-toggle="tab" style="border:0px" href="#menu0">Categories</a></li>
     <li><a data-toggle="tab" style="border:0px" href="#menu1">Articles</a></li>
-    <li><a data-toggle="tab" style="border:0px" href="#menu2">Advertisements</a></li>
-    <li><a data-toggle="tab" style="border:0px" href="#menu3">Enquiries</a></li>
+    <li><a data-toggle="tab" style="border:0px" href="#menu2">Advertisements</a></li>    
   </ul>
 
-  <div class="tab-content">
+<div class="tab-content">  
     <div id="home" class="tab-pane fade in active" style="padding:2%">
       <h3>Statistics</h3>
-      <p>A summary of your entire website</p>
-      <div id="summary">
+      <p>A summary of your entire website</p>      
+    </div>
+
+
+    <!-- CATEGORIES SECTION -->
+    <div id="menu0" class="tab-pane fade" style="padding:2%">      
+      <div class="col-lg-4">
+            <h3>Categories</h3>               
+            <div class="row">
+                <div class="col-lg-10">
+                    <input id="cat_name" type="text" placeholder="Category Name" class="form-control" />    
+                </div>
+                <div class="col-lg-1" style="margin-left:-6%">
+                    <button id="bcat" type="button" class="btn btn-sm btn-primary">Add</button>
+                </div>
+            </div>
+            <div class="row" id="cat_load" style="padding:4%;padding-right:9%">
+                
+            </div>
+      </div>
+      <div class="col-lg-1"></div>
+      <div id="div_sub" class="col-lg-4" style="display:none">
+            <h3>Sub-categories</h3>
+            <div class="row">
+                <div class="col-lg-10">
+                    <input id="sub_cat_name" type="text" placeholder="Category Name" class="form-control" />    
+                </div>
+                <div class="col-lg-1" style="margin-left:-6%">
+                    <button id="bsubcat" type="button" class="btn btn-sm btn-primary">Add</button>
+                </div>
+            </div>
+            <div class="row" id="sub_cat_load" style="padding:4%;padding-right:9%">
+                
+            </div>
+      </div>
+      <div class="col-lg-4">
       
       </div>
     </div>
+    <!-- CATEGORIES SECTION -->
 
     <!-- ARTICLES MENU -->
     <div id="menu1" class="tab-pane fade" style="padding:2%">      

@@ -48,7 +48,7 @@ class AppController extends Controller
     {
         $navbarQuery = "";
         $navbarQuery .= "SELECT id, parent_id, title, link, position FROM categories";
-        $navbarQuery .= " WHERE status = 'active' order by parent_id, position";
+        $navbarQuery .= " WHERE status = 'active' and parent_id > 0 order by parent_id, position";
 
         $navbarResult = $this -> Category -> query($navbarQuery);
 

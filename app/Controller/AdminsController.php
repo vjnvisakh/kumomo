@@ -182,12 +182,6 @@
                 $this -> ArticlesToCategory -> create();
                 $this -> ArticlesToCategory -> saveMany($aToC);
 
-
-                // $insertArticle  = "";
-                // $insertArticle .= " INSERT INTO articles(title,content,photo,status,created_by,created,modified)";
-                // $insertArticle .= " VALUES('".$title."','".$content."','".$pic."','active',1,'".date("Y-m-d")."','".date("Y-m-d")."')";
-                // $this -> Article -> query($insertArticle);
-
                 echo json_encode(1);
             }
             else 
@@ -300,6 +294,119 @@
             }
 
             $this -> log("AdminsController -> stats() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        // ADD NEW CATEGORIES
+        public function addCategory()
+        {
+            $this -> log("AdminsController -> stats() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+            $this -> log($requestData,LOG_DEBUG);
+
+            if($this->isLoggedIn())
+            {
+                $parentId = $requestData["parent"];
+                $title = $requestData["title"];
+                $link = "";
+                $position = 1;                
+
+                $insertCategory  = "";
+                $insertCategory .= " INSERT INTO categories(parent_id,title,link,position,status,created,modified)";
+                $insertCategory .= " VALUES($parentId,'".$title."','".$link."',$position,'active','".date("Y-m-d")."','".date("Y-m-d")."')";
+                $this -> Category -> query($insertCategory);
+                
+                echo json_encode(1);
+            }
+            else 
+            {
+                
+            }
+
+            $this -> log("AdminsController -> stats() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        // GET ALL THE CATEGORIES
+        public function getAllCategories()
+        {
+            $this -> log("AdminsController -> getAllCategories() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+            $this -> log($requestData,  LOG_DEBUG);
+
+            if($this->isLoggedIn())
+            {
+                $getAllCategories = " SELECT * FROM categories WHERE parent_id = 0 ORDER BY ID DESC";
+
+                $categories = $this -> Category -> query($getAllCategories);
+
+                $temp = "<ul class='list-group'>";
+
+                foreach($categories as $category)
+                {
+                    $temp .= "<li class='list-group-item'><i class='fa fa-folder' aria-hidden='true'></i>&nbsp;&nbsp;&nbsp;".$category["categories"]["title"]."<a href='#' onclick='delCat(".$category["categories"]["id"].")' style='cursor:pointer;float:right'><i class='fa fa-minus-circle' aria-hidden='true'></i></a><a href='#' onclick='getAllSubCategories(".$category["categories"]["id"].")' style='cursor:pointer;float:right'><i class='fa fa-plus-square' aria-hidden='true'>&nbsp;&nbsp;&nbsp;</i></a></li>";
+                }
+
+                $temp .= "</ul>";
+
+                echo json_encode($temp);
+            }
+            else 
+            {
+                $this -> redirect(array("action" => "index"));    
+            }
+
+            $this -> log("AdminsController -> getAllCategories() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        // TO DELETE A CATEGORY
+        public function deleteCategory()
+        {
+            $this -> log("AdminsController -> getAllCategories() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+            $this -> log($requestData,  LOG_DEBUG);
+
+            if($this->isLoggedIn())
+            {
+                $id = $requestData["id"];
+                $deleteCat = " DELETE FROM categories WHERE id = $id OR parent_id = $id";
+                $this -> Category -> query($deleteCat);
+            }
+            else 
+            {
+                $this -> redirect(array("action" => "index"));
+            }
+
+            $this -> log("AdminsController -> getAllCategories() -> END:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        public function getAllSubCategories()
+        {
+            $this -> log("AdminsController -> getAllCategories() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+
+            if($this->isLoggedIn())
+            {
+                $catId = $requestData["id"];
+
+                $getSubs = " SELECT * FROM categories WHERE parent_id = $catId";
+                $subs = $this -> Category -> query($getSubs);
+
+                $temp = "<ul class='list-group'>";
+
+                foreach($subs as $sub)
+                {   
+                    $temp .= "<li class='list-group-item'><i class='fa fa-file-o' aria-hidden='true'></i>&nbsp;&nbsp;&nbsp;".$sub["categories"]["title"]."<a href='#' onclick='delSubCat(".$sub["categories"]["id"].")' style='cursor:pointer;float:right'><i class='fa fa-minus-circle' aria-hidden='true'></i></a></li>";
+                }
+
+                $temp .= "</ul>";
+                
+                echo json_encode($temp);
+            }
+
+            $this -> log("AdminsController -> getAllCategories() -> END:".microtime(true),LOG_DEBUG);
             exit();
         }
     }
