@@ -157,6 +157,7 @@
 
                 $article["Article"]["photo"] = $this -> uploadPhoto($_FILES["tpic"], "articles");
                 $article["Article"]["photo_caption"] = $caption;
+                $article["Article"]["status"] = "active";
 
                 $article["Article"]["created_by"] = 1;
                 $article["Article"]["created"] = date("Y-m-d");
@@ -198,20 +199,43 @@
         {
             $this -> log("AdminsController -> addAdvertisement() -> START:".microtime(true),LOG_DEBUG);
             $requestData = $this -> request -> data;
-            $this -> log($requestData,LOG_DEBUG);
+            $this -> log($requestData, LOG_DEBUG);
+            $this -> log($_FILES, LOG_DEBUG);
 
             if(!empty($requestData))
             {
-                $talt = $requestData["talt"];
-                $tlink = $requestData["tlink"];
-                $tpos = $requestData["tpos"];
-                //$tpic = $requestData["tpic"];
-                $tpic = '';
+                $advertData = json_decode($requestData["advertJSON"], true);
+                
+                $alt = $advertData["alt"];
+                $link = $advertData["link"];
+                $position = $advertData["position"];
 
-                $insertAd  = "";
-                $insertAd .= " INSERT INTO ads(alt,photo,link,clicks,position,status,created,modified)";
-                $insertAd .= " VALUES('".$talt."','".$tpic."','".$tlink."',0,$tpos,'active','".date("Y-m-d")."','".date("Y-m-d")."')";
-                $this -> Ad -> query($insertAd);
+                $advert["Ad"]["alt"] = $alt;
+                $advert["Ad"]["link"] = $link;
+
+                $advert["Ad"]["photo"] = $this -> uploadPhoto($_FILES["tadPic"], "ads");
+                $advert["Ad"]["position"] = $position;
+                $advert["Ad"]["status"] = "active";
+
+                $advert["Ad"]["clicks"] = 0;
+                $advert["Ad"]["created"] = date("Y-m-d");
+                $advert["Ad"]["modified"] = date("Y-m-d");
+
+                $this -> log($advert, LOG_DEBUG);
+                
+                $this -> Ad -> create();
+                $this -> Ad -> save($advert);
+                
+                // $talt = $requestData["talt"];
+                // $tlink = $requestData["tlink"];
+                // $tpos = $requestData["tpos"];
+                // //$tpic = $requestData["tpic"];
+                // $tpic = '';
+
+                // $insertAd  = "";
+                // $insertAd .= " INSERT INTO ads(alt,photo,link,clicks,position,status,created,modified)";
+                // $insertAd .= " VALUES('".$talt."','".$tpic."','".$tlink."',0,$tpos,'active','".date("Y-m-d")."','".date("Y-m-d")."')";
+                // $this -> Ad -> query($insertAd);
 
                 echo json_encode(1);
             }
@@ -246,7 +270,15 @@
                     $tablerows .= "<td>".$row."</td>";
                     $tablerows .= "<td>".$advertisement["ads"]["alt"]."</td>";
                     $tablerows .= "<td><a target='blank' href='".$advertisement["ads"]["link"]."'>".$advertisement["ads"]["link"]."</a></td>";    
-                    $tablerows .= "<td>".$advertisement["ads"]["photo"]."</td>";
+                    if(!empty($advertisement["ads"]["photo"]))
+                    {
+                        $tablerows .= "<td><a href='" . $this -> webroot . "images/ads/";
+                        $tablerows .= $advertisement["ads"]["photo"] . "'target=_blank>Click here to view image</a></td>";
+                    } 
+                    else 
+                    {
+                        $tablerows .= "<td>No image was attached</td>";
+                    }
                     $tablerows .= "<td>".$advertisement["ads"]["position"]."</td>";
                     $tablerows .= "<td>".$advertisement["ads"]["clicks"]."</td>";                    
                     $tablerows .= "<td>".ucfirst($advertisement["ads"]["status"])."</td>";

@@ -74,21 +74,28 @@
 
             $("#badvert").click(function()
             {
-                var talt = $("#talt").val();
-                var tlink = $("#tlink").val();
-                var tpos = $("#tsel").val();
-                //var ttitle = $("#tpic").val();           
+                // var talt = $("#talt").val();
+                // var tlink = $("#tlink").val();
+                // var tpos = $("#tsel").val();
+				//var ttitle = $("#tpic").val();  
+				
+				var advert = {};
+				advert["alt"] = $("#talt").val();
+				advert["link"] = $("#tlink").val();
+				advert["position"] = $("#tsel").val();
+				
+				var advertJSON = JSON.stringify(advert);
+
+				var advertData = new FormData($("#advertFileUpload")[0]);
+				advertData.append("advertJSON", advertJSON);
 
                 $.ajax
                 (
                     {
                         type:"POST",
-                        data:
-                        {					
-                            talt:talt,
-                            tlink:tlink,
-                            tpos:tpos                            
-                        },
+                        data: advertData,
+						contentType: false,
+						processData: false,
                         url: <?=json_encode($this->webroot.'Admins/addAdvertisement');?>,
                         success: function (res) 
                         {
@@ -497,7 +504,10 @@
                     <option value="3">Space 3</option>
                     <option value="4">Space 4</option>
                 </select><br />
-                <input type="file" /><br/>
+                <form name="advertFileUpload" id="advertFileUpload" enctype="multipart/form-data" method="post" action="">
+							<input type="file" name="tadPic" id="tadPic" /> 
+				</form> 
+				<br/>
                 <button id="badvert" type="button" class="btn btn-primary btn-sm">Upload</button>                                
             </div>    
 
