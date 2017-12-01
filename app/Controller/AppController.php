@@ -137,66 +137,48 @@ class AppController extends Controller
 
     public function getArticlesByCategory($category = "all")
     {
+        $articleList = array();
+
         if($category == "all")
         {
-            $articleQuery = "";
+            $categoryQuery = "";
 
-            $categoryQuery = "SELECT id from categories as c where status='active'";
+            //$categoryQuery = "SELECT id from categories as c where status='active'";
+
+            $categoryQuery .= "SELECT count(*) AS cnt, atoc.category_id FROM articles_to_categories as atoc where atoc.status='active'";
+            $categoryQuery .= " GROUP BY atoc.category_id ORDER BY cnt";
             $categoryList = $this -> Category -> query($categoryQuery);
 
             $fetchedArticles = "0";
 
-            $articleList = array();
-
             foreach($categoryList as $category)
             {
-                $cId = $category["c"]["id"];
+                //$cId = $category["c"]["id"];
 
-                $articleQuery = "select * from articles as a inner join articles_to_categories as atoc";
+                $cId = $category["atoc"]["category_id"];
+
+                $articleQuery = "";
+                $articleQuery .= "select * from articles as a inner join articles_to_categories as atoc";
                 $articleQuery .= " on a.id = atoc.article_id where atoc.category_id = $cId";
-                $articleQuery .= " and a.id not in ($fetchedArticles) order by a.id desc limit 1";
+                $articleQuery .= " and a.id not in ($fetchedArticles) and a.status='active' order by a.id desc limit 1";
 
                 $articleResult = $this -> Article -> query($articleQuery);
 
-                 pr($articleQuery);
+                //  pr($articleQuery);
                  
                 if(!empty($articleResult))
                 {
-                    pr($articleResult);
+                    // pr($articleResult);
                     $fetchedArticles .= "," . $articleResult[0]["a"]["id"];
-                    $articleList[] = $articleResult;
+                    $articleList[] = $articleResult[0];
                 }
             }
-
-            pr($articleList);
-            exit;
-
-            //Displays the newest articles per category
-            $articleQuery .= "SELECT * FROM articles WHERE id IN (SELECT MAX(id) AS id FROM articles GROUP BY `position`)";
-
-            // //Displays the ads which have the minimum clicks per spaces
-            // $articleQuery .= "SELECT a.* FROM (SELECT `position`, MIN(clicks) AS minclicks FROM ads";
-            // $articleQuery .= " GROUP BY `position`) AS x INNER JOIN ads AS a";
-            // $articleQuery .= " ON a.`position` = x.`position` AND a.clicks = x.minclicks;";
         }
         else
         {
-            $articleQuery = "";
-            $articleQuery .= "SELECT * FROM ads as a WHERE `position`= $space ORDER BY id DESC LIMIT 1";
+            //Coming up soon...
         }
 
-        $adResult = $this -> Ad -> query($articleQuery);
-        $adList = array();
-        if(!empty($adResult))
-        {
-            foreach($adResult as $ad)
-            {
-                $ad = $ad["a"];
-                $position = intval($ad["position"]);
-                $adList[$position] = $ad;
-            }
-        }
-
-        return $adList;
+        return $articleList;
     }
 }
