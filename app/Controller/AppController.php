@@ -48,7 +48,7 @@ class AppController extends Controller
     {
         $navbarQuery = "";
         $navbarQuery .= "SELECT id, parent_id, title, link, position FROM categories";
-        $navbarQuery .= " WHERE status = 'active' and parent_id > 0 order by parent_id, position";
+        $navbarQuery .= " WHERE status = 'active' order by parent_id, position";
 
         $navbarResult = $this -> Category -> query($navbarQuery);
 
@@ -98,5 +98,40 @@ class AppController extends Controller
         }
 
         return "";
-	}
+    }
+    
+    public function getAdContentBySpaces($space = "all")
+    {
+        if($space == "all")
+        {
+            $adQuery = "";
+            // $adQuery .= "SELECT * FROM ads WHERE id IN (SELECT MAX(id) AS id FROM ads GROUP BY `position`)";
+
+            $adQuery .= "SELECT a.*
+FROM (SELECT `position`, MIN(clicks) AS minclicks
+      FROM ads
+      GROUP BY `position`) AS x
+     INNER JOIN ads AS a
+        ON a.`position` = x.`position` AND a.clicks = x.minclicks;";
+        }
+        else
+        {
+            $adQuery = "";
+            $adQuery .= "SELECT * FROM ads as a WHERE `position`= $space ORDER BY id DESC LIMIT 1";
+        }
+
+        $adResult = $this -> Ad -> query($adQuery);
+        $adList = array();
+        if(!empty($adResult))
+        {
+            foreach($adResult as $ad)
+            {
+                $ad = $ad["a"];
+                $position = intval($ad["position"]);
+                $adList[$position] = $ad;
+            }
+        }
+
+        return $adList;
+    }
 }

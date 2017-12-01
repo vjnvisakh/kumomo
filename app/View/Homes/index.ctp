@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
 		
 		::-webkit-scrollbar 
@@ -40,16 +40,84 @@
   </div>
 </div>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
-  <a class="navbar-brand" href="#">Logo</a>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-  </ul>
+<?php
+$html = '';
+$parent = 0;
+$parent_stack = array();
+
+// $navbarElements contains the results of the SQL query
+$children = array();
+//print_r($navbarElements);
+
+	if(!empty($navbarElements))
+	{
+?>
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top navbar-toggleable-md">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<a class="navbar-brand" href="#">Khashkhobor</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+<?php
+	}
+	foreach ( $navbarElements as $navbarElement)
+	{
+		$children[$navbarElement["categories"]["parent_id"]][] = $navbarElement["categories"];
+	}
+	//pr($children);
+	while ( ( $option = each($children[$parent]) ) || ( $parent > 0 ) )
+	{
+		//print_r($option);
+			if ( !empty( $option ) )
+			{
+					// 1) The item contains children:
+					// store current parent in the stack, and update current parent
+					if ( !empty( $children[$option['value']['id']] ) )
+					{
+?> 						
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								<?=$option['value']['title']?>
+								<span class="caret"></span></a>
+							</a>
+						<ul class="dropdown-menu iconNav">
+<?php
+							array_push( $parent_stack, $parent );
+							$parent = $option['value']['id'];
+					}
+					// 2) The item does not contain children
+					else
+					{
+?>
+						<li class="nav-item">
+						<a href="#" class="nav-link">
+								<?=$option['value']['title']?>
+						</a>
+						</li>
+<?php
+					}
+							
+			}
+			// 3) Current parent has no more children:
+			// jump back to the previous menu level
+			else
+			{
+?>
+				</ul>
+				</li>
+<?php
+					$parent = array_pop( $parent_stack );
+			}
+	}
+?>
+	</ul>
+	</div>
+	</div>
+	
 </nav>
 
 
@@ -57,10 +125,22 @@
 
 	<div class="row">
 	<!-- THE LEFT AD PANEL -->
-		<div class="col-lg-2" style="border:1px solid #222;padding:5%">
-			<h3>
-				AD SPACE 1
-			</h3>
+		<div class="col-lg-2" style="padding:1%">
+<?php
+			if(isset($adList[1]))
+			{
+				$currAd = $adList[1];
+?>
+				<a href="javascript:void(0);" onclick="registerClick('<?=$currAd["link"]?>', <?=$currAd["id"]?>);">
+					<img style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
+				</a>
+<?php
+			}
+			else 
+			{
+				echo "<h3>AD SPACE 1</h3>";
+			}
+?>
 		</div>
 	<!-- THE LEFT AD PANEL -->
 
@@ -112,10 +192,22 @@
 			</div>
 
 			<!-- THE RIGHT SIDE AD -->
-			<div class="col-lg-3" style="border:1px solid #222;padding:5%">
-				<h3>
-					AD SPACE 2
-				</h3>
+			<div class="col-lg-3" style="padding:1%">
+<?php
+			if(isset($adList[2]))
+			{
+				$currAd = $adList[2];
+?>
+				<a href="javascript:void(0);" onclick="registerClick('<?=$currAd["link"]?>', <?=$currAd["id"]?>);">
+					<img style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
+				</a>
+<?php
+			}
+			else 
+			{
+				echo "<h3>AD SPACE 2</h3>";
+			}
+?>
 			</div>
 			<!-- THE RIGHT SIDE AD -->
 
@@ -139,10 +231,22 @@
 			</div>
 		</div>
 
-		<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">
-				<h3>
-					AD SPACE 3
-				</h3>
+		<div class="col-lg-3 text-center" style="padding:1%">
+<?php
+			if(isset($adList[3]))
+			{
+				$currAd = $adList[3];
+?>
+				<a href="javascript:void(0);" onclick="registerClick('<?=$currAd["link"]?>', <?=$currAd["id"]?>);">
+					<img style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
+				</a>
+<?php
+			}
+			else 
+			{
+				echo "<h3>AD SPACE 3</h3>";
+			}
+?>
 		</div>
 	</div>
 	<!-- THE NEWS IN BRIEF  -->
@@ -153,3 +257,26 @@
 	</div>
 
 </div>
+</body>
+<script>
+	function registerClick(url, adId)
+	{
+		$.ajax
+		(
+			{
+				type:"POST",
+				data: {adId: adId},
+				url: <?=json_encode($this -> webroot.'ads/registerClick');?>,
+				success: function (res) 
+				{
+					window.open(url).focus();
+				},
+				error: function()
+				{
+					
+				}
+			}
+		); 
+	}
+</script>
+</html>

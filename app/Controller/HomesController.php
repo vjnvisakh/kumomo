@@ -17,7 +17,15 @@
 
         public function index()
         {
+			header('Content-Type: text/html; charset=utf-8');
 			$this -> layout = "";
+			$navbarElements = $this -> getNavbar();    
+            $adList = $this -> getAdContentBySpaces();
+
+            $this -> set("navbarElements", $navbarElements);
+            $this -> set("adList", $adList);
+			// print_r($navbarElements);
+			// exit();
         }
     }
 
