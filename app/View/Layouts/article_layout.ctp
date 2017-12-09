@@ -8,6 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2bde5dc7cbb300136d9670&product=inline-share-buttons"></script>
 
 	<style>
 		
@@ -20,10 +21,10 @@
 
 
 </head>
-<body style="height:1500px;margin:3%">
+<body>
 
 <div class="container-fluid">  
-  <div class="row" style="padding:2%;border:1px solid #222">
+  <div class="row" style="padding:2%;">
 	<div class="col-lg-4">
 		<h3>Khaskhobor.in</h3>
 	</div>
@@ -55,10 +56,11 @@
 
 <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-8">
+
+      <div class="col-lg-9" style="padding:2%">        
         <?= $this->fetch('content'); ?>
       </div>
-      <div class="col-lg-1"></div>
+
       <div class="col-lg-3" style="border:1px solid #eee">
         <h2>AD SPACE 1</h2>
       </div>

@@ -145,7 +145,7 @@ class AppController extends Controller
 
             //$categoryQuery = "SELECT id from categories as c where status='active'";
 
-            $categoryQuery .= "SELECT count(*) AS cnt, atoc.category_id FROM articles_to_categories as atoc where atoc.status='active'";
+            $categoryQuery .= "SELECT count(*) AS cnt, atoc.category_id FROM articles_to_categories as atoc where atoc.status = 'active'";
             $categoryQuery .= " GROUP BY atoc.category_id ORDER BY cnt";
             $categoryList = $this -> Category -> query($categoryQuery);
 
@@ -153,12 +153,10 @@ class AppController extends Controller
 
             foreach($categoryList as $category)
             {
-                //$cId = $category["c"]["id"];
-
                 $cId = $category["atoc"]["category_id"];
 
                 $articleQuery = "";
-                $articleQuery .= "select * from articles as a inner join articles_to_categories as atoc";
+                $articleQuery .= " select * from articles as a inner join articles_to_categories as atoc";
                 $articleQuery .= " on a.id = atoc.article_id where atoc.category_id = $cId";
                 $articleQuery .= " and a.id not in ($fetchedArticles) and a.status='active' order by a.id desc limit 1";
 

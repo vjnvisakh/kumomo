@@ -6,7 +6,7 @@
     {
 		//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables
         public $name = "Homes";
-        public $uses = array("Category"); 
+        public $uses = array("Category","CommentsToArticle"); 
 		//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables
 
         public function isAlive()
@@ -19,15 +19,14 @@
         {
 			header('Content-Type: text/html; charset=utf-8');
 			$this -> layout = "";
+
 			$navbarElements = $this -> getNavbar();    
             $adList = $this -> getAdContentBySpaces();
-            $articleList = $this -> getArticlesByCategory();
+            //$articleList = $this -> getArticlesByCategory();
 
             $this -> set("navbarElements", $navbarElements);
             $this -> set("adList", $adList);
-            $this -> set("articleList", $articleList);
-			// print_r($navbarElements);
-			// exit();
+            //$this -> set("articleList", $articleList);
         }
 
         // THIS ACTION IS USED TO VIEW THE ARTICLE
@@ -92,6 +91,89 @@
 
             $this -> log("HomesController -> fetchRelatedArticles() -> START:".microtime(true),LOG_DEBUG);
             exit();
+        }
+
+        /**
+        * This action is used to comment on a article
+        * @param - <name> [name of the person who has commented]
+        * @param - <email> [email of the person who has commented]
+        * @param - <articleId> [article id of the article on which the comments are made]
+        * @author - Visakh Vijayan
+        * @since - 09-Dec-2017     
+        *   
+        **/
+        public function commentOnArticle()
+        {
+            $this -> log("HomesController -> commentOnArticle() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;
+            $this -> log($requestData,LOG_DEBUG);
+
+            if(!empty($requestData))
+            {
+                // Arranging the post data into a model
+                $commentArr["name"] = $requestData["name"];
+                $commentArr["article_id"] = $requestData["articleId"];
+                $commentArr["email"] = $requestData["email"];
+                $commentArr["comment"] = $requestData["comment"];
+                $commentArr["created"] = date("Y-m-d h:i:s");
+                $commentArr["status"] = "active";
+
+                // Saving the data into the table
+                $this -> CommentsToArticle -> create();
+                $this -> CommentsToArticle -> save($commentArr);
+            }
+            else
+            {
+
+            }
+
+            $this -> log("HomesController -> commentOnArticle() -> START:".microtime(true),LOG_DEBUG);
+            exit();
+        }
+
+        /**
+        * This action is used to fetch all the comments related to an article
+        * It takes it according to the date last posted on
+        * @param - <articleId> [id of the article for which the comments are required]
+        * @author - Visakh Vijayan
+        * @since - 09-Dec-2017        
+        *
+        **/
+        public function fetchArticleComments()
+        {
+            $this -> log("HomesController -> commentOnArticle() -> START:".microtime(true),LOG_DEBUG);
+            $requestData = $this -> request -> data;            
+            $this -> layout = "";
+
+            if(!empty($requestData))
+            {
+                $articleId = $requestData["articleId"];
+
+                $comments = $this -> CommentsToArticle -> find
+                (
+                    "all",array
+                    (
+                        "conditions" => array
+                        (
+                            "article_id" => $articleId,
+                            "status" => "active"
+                        ),
+                        "order" => array
+                        (
+                            "created" => "desc"
+                        )
+                    )
+                );
+
+                $this -> set("COMMENTS",$comments);
+            }
+            else
+            {
+
+            }
+
+            $this -> render("/Elements/comment_on_article");
+            $this -> log("HomesController -> commentOnArticle() -> END:".microtime(true),LOG_DEBUG);
         }
     }
 

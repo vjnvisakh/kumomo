@@ -20,10 +20,10 @@
 
 
 </head>
-<body style="height:1500px;margin:3%">
+<body>
 
 <div class="container-fluid">  
-  <div class="row" style="padding:2%;border:1px solid #222">
+  <div class="row" style="padding:2%;">
 	<div class="col-lg-4">
 		<h3>Khaskhobor.in</h3>
 	</div>
@@ -295,13 +295,50 @@ $children = array();
 	<!-- THE NEWS IN BRIEF  -->
 	
 	<br />
-	<div class="row" style="padding:5%;background:#222;color:#eee">
-		<h3>Footer</h3>
+
+
+
+
+
+	<!-- THE FOOTER SECTION -->
+	<div class="row" style="padding:4%;background:#222;color:#eee">
+		<div class="col-lg-3">			
+			<h3>Khaskhobor.in</h3>
+			<p>A one stop solution for news</p>
+		</div>
+		<div class="col-lg-3" style="border-left:1px solid #333">					
+			<ul style="list-style-type:none">
+				<h5>Get in Touch with us</h5>
+				<li>Home</li>
+				<li>About Us</li>
+				<li>Khaskhobor</li>
+				<li>Advertisement</li>
+				<li>Contact</li>
+			</ul>
+		</div>
 	</div>
+	<!-- THE FOOTER SECTION -->
+
+
+	<!-- THE COMPANY SECTION -->
+	<div class="row" style="background:#222;color:#eee;text-align:center;">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4" style="color:#444">
+			<small class="help-block">Powered by KM Enterprises</small>
+		</div>
+		<div class="col-lg-4"></div>
+	</div>
+	<!-- THE COMPANY SECTION -->	
+
+
+
+
+
 
 </div>
 </body>
 <script>
+
 	function registerClick(url, adId)
 	{
 		$.ajax

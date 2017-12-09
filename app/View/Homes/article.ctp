@@ -1,8 +1,10 @@
 <script>
 
+    var articleId = 0;
+
     $(document).ready(function()
     {
-        var articleId = <?= json_encode($ID); ?>
+        articleId = <?= json_encode($ID); ?>
 
         $.ajax
         (
@@ -23,51 +25,110 @@
                 }
             }
         );
+
+
+        $.ajax
+        (
+            {
+                url: '<?=$this->webroot.'Homes/fetchArticleComments'?>',
+                type: "POST",                
+                data: 
+                {
+                    articleId:articleId
+                },
+            }
+        )
+        .done(function(res) 
+        {
+            $("#div_comments").html(res);
+        })
+        .fail(function() 
+        {
+            alert("Oops");
+        })
+        .always(function() 
+        {
+            console.log("complete");
+        });
+        
     });
+
+
+    function commentOnArticle()
+    {           
+        var name = $("#inp_name").val();
+        var email = $("#inp_email").val();
+        var comment = $("#txt_comment").val();
+        var url = '<?=$this->webroot.'Homes/commentOnArticle'?>';
+
+        $.ajax
+        (
+            {
+                url: url,
+                data: 
+                {
+                    name: name,
+                    email: email,
+                    articleId: articleId,
+                    comment:comment
+                },
+                type: "POST"
+            }
+        )
+        .done(function() 
+        {
+            alert("success");
+        })
+        .fail(function() 
+        {
+            alert("error");
+        })
+        .always(function() 
+        {
+            console.log("complete");
+        });        
+    }
 
 </script>
 <div class="container-fluid">
     <!-- TITLE OF THE ARTICLE -->
     <div id="title" class="row" style="padding-top:5%">
         <div class="col-lg-12">
-        <h1>
+        <h1>            
             <?=$TITLE?>
         </h1>        
         </div>
     </div>
     
     <!-- AREA FOR THE VIEWS AND OTHER META DATA -->
-    <div id="meta" class="row">
-        <!-- <div class="col-lg-1">
-            <img src="<?=$this->webroot.'images/dummy.png'?>" height="25" width="25" />
-        </div> -->
-        <!-- <div class="col-lg-1">
-            <b>Admin</b>
-        </div> -->
-        <div class="col-lg-3">
-            <small><b>Published:</b> <?=date("d-M-Y",strtotime($CREATED))?></small>
+    <div id="meta" class="row">                
+        <div class="col-lg-2">
+            <small><?=date("d-M-Y",strtotime($CREATED))?></small>
         </div>
         <div class="col-lg-2">
             <small><b>Views: </b>200</small>
-        </div>
-        <div class="col-lg-2"></div>
-        <div class="col-lg-2"></div>
+        </div> 
     </div>
 
     <br/>
     <!-- AREA FOR THE PIC -->
     <div id="cover" class="row">
-        <div class="col-lg-12">
-        <img height="400" width="800" src="<?=$this->webroot.'images/articles/'.$PIC?>" style="border:4px solid #eee;margin-bottom:2%;box-shadow:0px 1px 1px" />
+        <div class="col-lg-12">        
+        <img height="500" width="950" src="<?=$this->webroot.'images/articles/'.$PIC?>" style="border:4px solid #eee;margin-bottom:2%;box-shadow:0px 1px 1px" />
         </div>
     </div>
 
     <!-- AREA FOR THE TEXT -->
-    <div id="txtBox" class="row">
+    <div id="txtBox" class="row" style="padding:2%">
         <div class="col-lg-12">
-        <p style="text-align:justify">
-            <?=$CONTENT?>
-        </p>
+            <div class="row">
+                <p style="text-align:justify">  
+                    <?=$CONTENT?>
+                </p>
+            </div>
+            <div class="row" style="width: 20%">
+                <div class="sharethis-inline-share-buttons"></div>
+            </div>
         </div>
     </div>
 
@@ -83,10 +144,30 @@
     </div>
 
 
-    <!-- AREA FOR THE COMMENTS -->
-    <div id="comments" class="row">
-        <div class="col-lg-12" id="u_comments" style="padding-top:5%">
-            <h4>Comments</h4>
+    <!-- AREA FOR THE COMMENT BOX -->
+    <div id="comments" class="row" style="padding:2%">
+        <textarea id="txt_comment" class="form-control" rows="4" cols="135"></textarea>
+    </div>    
+
+    <div class="row" style="padding:0.5%">
+        <div class="col-lg-3">
+            <input id="inp_name" type="text" name="" class="form-control" placeholder="Name">
+        </div>
+        <div class="col-lg-3">
+            <input id="inp_email" type="text" name="" class="form-control" placeholder="Email">
+        </div>                
+        <div class="col-lg-3">
+            <button onclick="commentOnArticle()" type="button" class="btn btn-danger">Comment</button>
         </div>
     </div>
+
+    <br><br><br>
+    <!-- AREA FOR THE COMMENT BOX -->
+
+    <!-- AREA FOR PREVIOUS COMMENTS -->
+    <div id="div_comments">
+
+    </div>
+    <!-- AREA FOR PREVIOUS COMMENTS -->    
+
 </div>
