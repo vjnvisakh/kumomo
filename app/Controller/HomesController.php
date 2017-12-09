@@ -21,9 +21,11 @@
 			$this -> layout = "";
 			$navbarElements = $this -> getNavbar();    
             $adList = $this -> getAdContentBySpaces();
+            $articleList = $this -> getArticlesByCategory();
 
             $this -> set("navbarElements", $navbarElements);
             $this -> set("adList", $adList);
+            $this -> set("articleList", $articleList);
 			// print_r($navbarElements);
 			// exit();
         }

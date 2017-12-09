@@ -105,14 +105,14 @@ class AppController extends Controller
         if($space == "all")
         {
             $adQuery = "";
+
+            //Displays the newest ads per space
             // $adQuery .= "SELECT * FROM ads WHERE id IN (SELECT MAX(id) AS id FROM ads GROUP BY `position`)";
 
-            $adQuery .= "SELECT a.*
-FROM (SELECT `position`, MIN(clicks) AS minclicks
-      FROM ads
-      GROUP BY `position`) AS x
-     INNER JOIN ads AS a
-        ON a.`position` = x.`position` AND a.clicks = x.minclicks;";
+            //Displays the ads which have the minimum clicks per spaces
+            $adQuery .= "SELECT a.* FROM (SELECT `position`, MIN(clicks) AS minclicks FROM ads";
+            $adQuery .= " GROUP BY `position`) AS x INNER JOIN ads AS a";
+            $adQuery .= " ON a.`position` = x.`position` AND a.clicks = x.minclicks;";
         }
         else
         {
@@ -133,5 +133,52 @@ FROM (SELECT `position`, MIN(clicks) AS minclicks
         }
 
         return $adList;
+    }
+
+    public function getArticlesByCategory($category = "all")
+    {
+        $articleList = array();
+
+        if($category == "all")
+        {
+            $categoryQuery = "";
+
+            //$categoryQuery = "SELECT id from categories as c where status='active'";
+
+            $categoryQuery .= "SELECT count(*) AS cnt, atoc.category_id FROM articles_to_categories as atoc where atoc.status='active'";
+            $categoryQuery .= " GROUP BY atoc.category_id ORDER BY cnt";
+            $categoryList = $this -> Category -> query($categoryQuery);
+
+            $fetchedArticles = "0";
+
+            foreach($categoryList as $category)
+            {
+                //$cId = $category["c"]["id"];
+
+                $cId = $category["atoc"]["category_id"];
+
+                $articleQuery = "";
+                $articleQuery .= "select * from articles as a inner join articles_to_categories as atoc";
+                $articleQuery .= " on a.id = atoc.article_id where atoc.category_id = $cId";
+                $articleQuery .= " and a.id not in ($fetchedArticles) and a.status='active' order by a.id desc limit 1";
+
+                $articleResult = $this -> Article -> query($articleQuery);
+
+                //  pr($articleQuery);
+                 
+                if(!empty($articleResult))
+                {
+                    // pr($articleResult);
+                    $fetchedArticles .= "," . $articleResult[0]["a"]["id"];
+                    $articleList[] = $articleResult[0];
+                }
+            }
+        }
+        else
+        {
+            //Coming up soon...
+        }
+
+        return $articleList;
     }
 }
