@@ -75,3 +75,12 @@ CREATE TABLE `users`
 )
 ENGINE = MyISAM
 DEFAULT CHARSET = utf8;
+
+CREATE TABLE `site_hits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `today` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hits` int(11) DEFAULT NULL,
+  `created` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
