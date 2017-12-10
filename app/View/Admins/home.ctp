@@ -24,7 +24,7 @@
 			margin:2%;
 			height: 140px;
 			width: 140px;			
-			font-size:180%;
+			font-size:200%;
 			background:#eee;
 			text-align: center;
 			padding-top:4%;
@@ -181,52 +181,7 @@
 			});
 
 
-			// This method is used to fetch the website hits
-			function fetchSiteHits()
-			{
-				$.ajax
-				(
-					{
-						url: <?=json_encode($this->webroot.'Admins/fetchSiteHits');?>						
-					}
-				)
-				.done(function(res) 
-				{
-					res = JSON.parse(res);
-					console.log(res);
-
-					var chart = new CanvasJS.Chart("chartContainer", 
-					{
-						animationEnabled: true,
-						theme: "light2", // "light1", "light2", "dark1", "dark2"
-						title:
-						{
-							text: "Performance"
-						},
-						axisY: 
-						{
-							title: "Page hits"
-						},
-						data: [{        
-							type: "column",  
-							showInLegend: true, 
-							legendMarkerColor: "grey",
-							legendText: "Days",
-							dataPoints: res
-						}]
-					});
-					chart.render();
-				})
-				.fail(function() 
-				{
-					console.log("error");
-				})
-				.always(function() 
-				{
-					console.log("complete");
-				});				
-			}
-
+			
 			
 
 
@@ -473,6 +428,58 @@
 			);			
 		}
 
+		// This method is used to fetch the website hits
+		function fetchSiteHits(graphType = "column")
+		{			
+			$.ajax
+			(
+				{
+					url: <?=json_encode($this->webroot.'Admins/fetchSiteHits');?>						
+				}
+			)
+			.done(function(res) 
+			{
+				res = JSON.parse(res);
+				console.log(res);
+
+				var chart = new CanvasJS.Chart("chartContainer", 
+				{
+					animationEnabled: true,
+					theme: "light2", // "light1", "light2", "dark1", "dark2"
+					title:
+					{
+						text: "Performance"
+					},
+					axisY: 
+					{
+						title: "Page hits"
+					},
+					data: [{        
+						type: graphType,  
+						showInLegend: true, 
+						legendMarkerColor: "grey",
+						legendText: "Days",
+						dataPoints: res
+					}]
+				});
+				chart.render();
+			})
+			.fail(function() 
+			{
+				console.log("error");
+			})
+			.always(function() 
+			{
+				console.log("complete");
+			});				
+		}
+
+
+		function hitMe(graphType)
+		{			
+			fetchSiteHits(graphType);
+		}
+
 	</script>
 
 
@@ -522,6 +529,15 @@
 		</div>
 
 		<div class="row" style="padding-left:15%;padding-right:15%;padding-top:5%">
+			<div class="row">
+				<div class="col-lg-9"></div>
+				<div class="col-lg-3">
+					<button style="background:#286090;color:#fff" type="button" onclick="hitMe('bar')" class="btn btn-sm">Bar</button>
+					<button style="background:#286090;color:#fff" type="button" onclick="hitMe('pie')" class="btn btn-sm">Pie</button>
+					<button style="background:#286090;color:#fff" type="button" onclick="hitMe('column')" class="btn btn-sm">Column</button>
+				</div>
+				
+			</div>
 			<div id="chartContainer" style="height: 300px; width: 100%;"></div>
 			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>		
 		</div>
