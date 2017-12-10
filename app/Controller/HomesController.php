@@ -22,11 +22,11 @@
 
 			$navbarElements = $this -> getNavbar();    
             $adList = $this -> getAdContentBySpaces();
-            //$articleList = $this -> getArticlesByCategory();
+            $articleList = $this -> getArticlesByCategory();
 
             $this -> set("navbarElements", $navbarElements);
             $this -> set("adList", $adList);
-            //$this -> set("articleList", $articleList);
+            $this -> set("articleList", $articleList);
         }
 
         // THIS ACTION IS USED TO VIEW THE ARTICLE
@@ -175,6 +175,51 @@
             $this -> render("/Elements/comment_on_article");
             $this -> log("HomesController -> commentOnArticle() -> END:".microtime(true),LOG_DEBUG);
         }
+
+        /**
+        * This action is used to render the carousel structure
+        * 
+        * @param <limit> [Number of articles to be displayed]
+        * @author - Tanushree Chakravarty
+        * @since - 09-Dec-2017        
+        *
+        **/
+
+        public function getArticlesForCarousel()
+        {
+            $this -> layout = "";
+
+            $limit = (is_numeric($_POST["limit"])) ? $_POST["limit"] : 5;
+
+            $articleList = $this -> fetchLatestArticles($limit);
+
+            $this -> set("articleList", $articleList);
+
+            $this -> render("/Elements/carousel_articles");
+        }
+
+        /**
+        * This action is used to fetch the articles to be displayed on the carousel
+        * 
+        * @param <limit> [Number of articles to be displayed]
+        * @author - Tanushree Chakravarty
+        * @since - 09-Dec-2017        
+        *
+        **/
+
+        public function fetchLatestArticles($limit = 5)
+        {
+           $articleQuery = "SELECT *
+                            FROM articles as Article
+                            where status = 'active' and photo <> ''
+                            ORDER BY id DESC
+                            LIMIT $limit";
+
+            $articleList = $this -> Article -> query($articleQuery);
+            
+            return $articleList;
+        }
+
     }
 
     
