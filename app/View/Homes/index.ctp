@@ -53,9 +53,9 @@
 </div>
 
 <?php
-$html = '';
+$html = "";
 $parent = 0;
-$parent_stack = array();
+$parentStack = array();
 
 // $navbarElements contains the results of the SQL query
 $children = array();
@@ -81,25 +81,25 @@ $children = array();
 		$children[$navbarElement["categories"]["parent_id"]][] = $navbarElement["categories"];
 	}
 	//pr($children);
-	while ( ( $option = each($children[$parent]) ) || ( $parent > 0 ) )
+	while(($option = each($children[$parent])) || ($parent > 0))
 	{
 		//print_r($option);
-			if ( !empty( $option ) )
+			if (!empty($option))
 			{
 					// 1) The item contains children:
 					// store current parent in the stack, and update current parent
-					if ( !empty( $children[$option['value']['id']] ) )
+					if(!empty($children[$option["value"]["id"]]))
 					{
 ?> 						
 						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								<?=$option['value']['title']?>
+							<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+								<?=$option["value"]["title"]?>
 								<span class="caret"></span></a>
 							</a>
-						<ul class="dropdown-menu iconNav">
+						<ul class="dropdown-menu">
 <?php
-							array_push( $parent_stack, $parent );
-							$parent = $option['value']['id'];
+							array_push($parentStack, $parent);
+							$parent = $option["value"]["id"];
 					}
 					// 2) The item does not contain children
 					else
@@ -107,7 +107,7 @@ $children = array();
 ?>
 						<li class="nav-item">
 						<a href="#" class="nav-link">
-								<?=$option['value']['title']?>
+								<?=$option["value"]["title"]?>
 						</a>
 						</li>
 <?php
@@ -122,7 +122,7 @@ $children = array();
 				</ul>
 				</li>
 <?php
-					$parent = array_pop( $parent_stack );
+					$parent = array_pop($parentStack);
 			}
 	}
 ?>
