@@ -106,8 +106,8 @@
 					$tablerows .= "<tr>";
 					$tablerows .= "<td>".$row."</td>";
 					$tablerows .= "<td>".$article["articles"]["title"]."</td>";
-					$tablerows .= "<td>".$article["articles"]["created_by"]."</td>";
-					$tablerows .= "<td>".substr($article["articles"]["content"],0,70).". . .</td>"; 
+					//$tablerows .= "<td>".$article["articles"]["created_by"]."</td>";
+					$tablerows .= "<td>".substr($article["articles"]["content"],0,50).". . .</td>"; 
 					if(!empty($article["articles"]["photo"]))
 					{
 						$tablerows .= "<td><a href='" . $this -> webroot . "images/articles/";
@@ -117,9 +117,18 @@
 					{
 						$tablerows .= "<td>No image was attached</td>";
 					}
-					$tablerows .= "<td>".$article["articles"]["created"]."</td>";
-					$tablerows .= "<td>".ucfirst($article["articles"]["status"])."</td>";
-					$tablerows .= "<td><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> | <a href='#'><i class='fa fa-pencil' aria-hidden='true'></i></a> </td>";
+					$tablerows .= "<td>".date("d-M-y",strtotime($article["articles"]["created"]))."</td>";
+
+					if($article["articles"]["status"] == "active")
+					{
+						$tablerows .= "<td style='color:green'>".ucfirst($article["articles"]["status"])."</td>";						
+					}
+					else
+					{
+						$tablerows .= "<td style='color:red'>".ucfirst($article["articles"]["status"])."</td>";
+					}
+					
+					$tablerows .= "<td style='text-align:center'><a onclick='deleteArticle(".$article["articles"]["id"].")'><i class='fa fa-trash-o' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='deactivateArticle(".$article["articles"]["id"].")'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> </td>";
 					$tablerows .= "</tr>";
 					$row++;
 				}
@@ -324,7 +333,7 @@
 
 				$count = $articleCount[0][0]["cnt"]."|".$categoryCount[0][0]["cnt"]."|".$adCount[0][0]["cnt"];
 				$count .= "|". $userCount[0][0]["cnt"];
-				
+
 				echo json_encode($count);
 			}
 			else
@@ -446,6 +455,54 @@
 			}
 
 			$this -> log("AdminsController -> getAllCategories() -> END:".microtime(true),LOG_DEBUG);
+			exit();
+		}
+
+		/**
+		* This action is used to delete an article
+		* The status of the article is changed from active to deleted
+		* @param - <articleId> [The id of the article to be deleted]		
+		* @author - Visakh Vijayan
+		*/
+		public function deleteArticle()
+		{
+			$this -> log("AdminsController -> deleteArticle() -> START:".microtime(true),LOG_DEBUG);
+			$requestData = $this -> request -> data;
+
+			if(!empty($requestData))
+			{
+				$articleId = $requestData["articleId"];
+
+				$sql  = "";
+				$sql .= " UPDATE articles SET status = case when status = 'active' then 'deleted' else 'active' end WHERE id = $articleId";
+				$this -> Article -> query($sql);
+			}
+
+			$this -> log("AdminsController -> deleteArticle() -> START:".microtime(true),LOG_DEBUG);
+			exit();
+		}
+
+		/**
+		* This action is used to deactivate an article
+		* The status of the article is changed from active to inactive
+		* @param - <articleId> [The id of the article to be deleted]		
+		* @author - Visakh Vijayan
+		*/
+		public function deactivateArticle()
+		{
+			$this -> log("AdminsController -> deactivateArticle() -> START:".microtime(true),LOG_DEBUG);
+			$requestData = $this -> request -> data;
+
+			if(!empty($requestData))
+			{
+				$articleId = $requestData["articleId"];
+
+				$sql  = "";
+				$sql .= " UPDATE articles SET status = case when status = 'active' then 'inactive' else 'active' end WHERE id = $articleId";
+				$this -> Article -> query($sql);
+			}
+
+			$this -> log("AdminsController -> deactivateArticle() -> START:".microtime(true),LOG_DEBUG);
 			exit();
 		}
 	}

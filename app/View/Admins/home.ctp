@@ -31,6 +31,8 @@
 			font-weight: bold;			
 		}
 
+
+
 	</style>
 
 
@@ -182,31 +184,7 @@
 			
 
 
-			function  loadAllArticles()
-			{
-				$.ajax
-				(
-					{
-						type:"POST",
-						data:
-						{					
-							
-						},
-						url: <?=json_encode($this->webroot.'Admins/getAllArticles');?>,
-						success: function (res) 
-						{
-							$("#tbody").html(JSON.parse(res));
-							// To generate the datatable
-							$("#tab_article").DataTable();
-							// To generate the datatable
-						},
-						error: function()
-						{
-							
-						}
-					}
-				);
-			}            
+			          
 
 			function  loadAllAdvertisements()
 			{
@@ -373,6 +351,81 @@
 			);
 		}
 
+		function loadAllArticles()
+		{
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						
+					},
+					url: <?=json_encode($this->webroot.'Admins/getAllArticles');?>,
+					success: function (res) 
+					{
+						$("#tbody").html(JSON.parse(res));
+						// To generate the datatable
+						$("#tab_article").DataTable();
+						// To generate the datatable
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);
+		}  
+
+		// This method is used to delete the particular article
+		function deleteArticle(articleId)
+		{
+
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						articleId:articleId
+					},
+					url: <?=json_encode($this->webroot.'Admins/deleteArticle');?>,
+					success: function (res) 
+					{
+						loadAllArticles();			
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);			
+		}
+
+		// This method is used to deactivate the particular article
+		function deactivateArticle(articleId)
+		{
+
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						articleId:articleId
+					},
+					url: <?=json_encode($this->webroot.'Admins/deactivateArticle');?>,
+					success: function (res) 
+					{
+						loadAllArticles();			
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);			
+		}
 
 	</script>
 
@@ -514,12 +567,12 @@
 					<thead>
 						<th>Id</th>
 						<th>Title</th>
-						<th>Author</th>
+						<!-- <th>Author</th> -->
 						<th>Content</th>
 						<th>Picture</th>
 						<th>Created</th>
 						<th>Status</th>
-						<th>Action</th>
+						<th style="text-align: center">Action</th>
 					</thead>
 					<tbody id="tbody">
 					</tbody>
