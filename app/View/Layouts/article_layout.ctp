@@ -14,7 +14,7 @@
 		
 		::-webkit-scrollbar 
 		{ 
-    		display: none; 
+			display: none; 
 		}
 
 	</style>
@@ -23,45 +23,41 @@
 </head>
 <body>
 
-<div class="container-fluid">  
-  <div class="row" style="padding:2%;">
-	<div class="col-lg-4">
-		<h3>Khaskhobor.in</h3>
-	</div>
-	<div class="col-lg-6 text-center">
-		<a href="#">Home</a> |
-		<a href="#">About Us</a> |
-		<a href="#">Khaskhobor</a> |
-		<a href="#">Advertisement</a> |
-		<a href="#">Contact</a>
-	</div>
-	<div class="col-lg-2">
-
-	</div>
-  </div>
+<div class="container-fluid">
+	<?= $this -> element("header"); ?>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
   <a class="navbar-brand" href="#">Logo</a>
   <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
+	<li class="nav-item">
+	  <a class="nav-link" href="#">Link</a>
+	</li>
+	<li class="nav-item">
+	  <a class="nav-link" href="#">Link</a>
+	</li>
   </ul>
 </nav>
 
 
 <div class="container-fluid">
-    <div class="row">
+	<div class="row">
 
-      <div class="col-lg-9" style="padding:2%">        
-        <?= $this->fetch('content'); ?>
-      </div>
+	  <div class="col-lg-9" style="padding:2%">        
+		<?= $this->fetch('content'); ?>
+	  </div>
 
-      <div class="col-lg-3" style="border:1px solid #eee">
-        <h2>AD SPACE 1</h2>
-      </div>
-    </div>
+	  <div class="col-lg-3" style="border:1px solid #eee">
+		<h2>AD SPACE 1</h2>
+	  </div>
+	</div>	
+</div>
+
+
+<div class="container-fluid" style="margin-top:10%">
+	<!-- FOOTER SECTION -->
+	<?= $this -> element("footer"); ?>	
+	<!-- FOOTER SECTION -->
+</div>
+
+</body>

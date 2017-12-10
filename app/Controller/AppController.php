@@ -39,6 +39,7 @@ class AppController extends Controller
     public $uses = array("Category", "User", "Feedback", "Ad", "Article", "ArticlesToCategory");
 	
 	/**
+     * CULPRIT CAUGHT RED HANDED # 1
 	 * This method returns the list of navbar links from the database
 	 *
 	 * @return array of Navbar links
@@ -151,6 +152,9 @@ class AppController extends Controller
 
             $fetchedArticles = "0";
 
+            //+ VISAKH - 09-Dec-2017 - KM# - To fetch the last update time of the site
+            $lastUpdatedOn = "";
+
             foreach($categoryList as $category)
             {
                 $cId = $category["atoc"]["category_id"];
@@ -166,11 +170,21 @@ class AppController extends Controller
                  
                 if(!empty($articleResult))
                 {
+                    //+ VISAKH - 09-Dec-2017 - KM#
+                    if($lastUpdatedOn == "")
+                    {
+                        $lastUpdatedOn = $articleResult[0]["a"]["created"];
+                    }
+                    //- VISAKH - 09-Dec-2017 - KM#
+
                     // pr($articleResult);
                     $fetchedArticles .= "," . $articleResult[0]["a"]["id"];
                     $articleList[] = $articleResult[0];
                 }
             }
+
+            //+ VISAKH - 09-Dec-2017 - KM# TO SET THE LAST UPDATED TIME
+            $this -> set("LAST_UPDATED_ON",$lastUpdatedOn);
         }
         else
         {

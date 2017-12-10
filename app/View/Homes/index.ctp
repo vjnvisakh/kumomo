@@ -8,7 +8,33 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
+  <script type="text/javascript">
+  		
+  		$(document).ready(function()
+  		{
+
+  			$.ajax
+  			(
+  				{
+  					url: '<?=$this->webroot.'Homes/fetchRecentCategories'?>'  					
+  				}
+  			)
+  			.done(function(res) 
+  			{  				
+  				$("#latest_categories").html(res);
+  			})
+  			.fail(function() {
+  				console.log("error");
+  			})
+  			.always(function() {
+  				console.log("complete");
+  			});
+  			
+  		});
+
+  </script>
+
 	<style>
 		
 		::-webkit-scrollbar 
@@ -22,22 +48,8 @@
 </head>
 <body>
 
-<div class="container-fluid">  
-  <div class="row" style="padding:2%;">
-	<div class="col-lg-4">
-		<h3>Khaskhobor.in</h3>
-	</div>
-	<div class="col-lg-6 text-center">
-		<a href="#">Home</a> |
-		<a href="#">About Us</a> |
-		<a href="#">Khaskhobor</a> |
-		<a href="#">Advertisement</a> |
-		<a href="#">Contact</a>
-	</div>
-	<div class="col-lg-2">
-
-	</div>
-  </div>
+<div class="container-fluid" style="background:#343434;border-top:5px solid #404040"> 
+	<?= $this -> element("header"); ?>
 </div>
 
 <?php
@@ -52,7 +64,7 @@ $children = array();
 	if(!empty($navbarElements))
 	{
 ?>
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top navbar-toggleable-md">
+		<nav style="background:#286090" class="navbar navbar-expand-sm navbar-dark sticky-top navbar-toggleable-md">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
@@ -176,23 +188,25 @@ $children = array();
 
 
 	<br />
-	<div class="row">
+	<div class="row" style="padding:1%">
 
-			<div class="col-lg-9" style="border:1px solid #222">
-				<div class="row" style="padding:2%">
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
-					<div class="col-lg-3 text-center" style="border:1px solid #222;padding:5%">ART</div>
+			<div class="col-lg-8" style="border:1px solid #eee;color:#fff">
+				<div class="row" style="background:#286090;padding:1%;">
+					<div class="col-lg-10">
+						<span>Popular Categories</span>
+					</div>
+					<div class="col-lg-2 text-right">
+						<span style="font-size:90%">more</span>
+					</div>
+				</div>				
+				<div class="row" style="padding:2%" id="latest_categories">
+					
 				</div>
 			</div>
-
+			
+			<div class="col-lg-1"></div>
 			<!-- THE RIGHT SIDE AD -->
-			<div class="col-lg-3" style="padding:1%">
+			<div class="col-lg-3" style="padding:1%;border:1px solid #eee">
 <?php
 			if(isset($adList[2]))
 			{
@@ -226,7 +240,7 @@ $children = array();
 			<h3 align="center">Latest News</h3>
 			<div class="row" style="margin-bottom:1%">				
 				<div class="col-lg-2" style="padding:1%">
-					<a target="_blank" href="<?php echo $this -> webroot . 'homes/articles/' . $articleList[0]["a"]["id"] ?>">
+					<a target="_blank" href="<?php echo $this -> webroot . 'homes/article/' . $articleList[0]["a"]["id"] ?>">
 						<img 
 							style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" 
 							src="<?php echo $this -> webroot . 'images/articles/' . $articleList[0]["a"]["photo"]?>" 
@@ -240,7 +254,7 @@ $children = array();
 				{
 ?>
 					<li type="square"><h6>
-						<a style="color:black;" target="_blank" href="<?php echo $this -> webroot . 'homes/articles/' . $articleList[$index]["a"]["id"] ?>">
+						<a style="color:black;" target="_blank" href="<?php echo $this -> webroot . 'homes/article/' . $articleList[$index]["a"]["id"] ?>">
 							<?=$articleList[$index]["a"]["title"]?>
 						</a>
 					</h6></li>
@@ -300,35 +314,7 @@ $children = array();
 
 
 
-	<!-- THE FOOTER SECTION -->
-	<div class="row" style="padding:4%;background:#222;color:#eee">
-		<div class="col-lg-3">			
-			<h3>Khaskhobor.in</h3>
-			<p>A one stop solution for news</p>
-		</div>
-		<div class="col-lg-3" style="border-left:1px solid #333">					
-			<ul style="list-style-type:none">
-				<h5>Get in Touch with us</h5>
-				<li>Home</li>
-				<li>About Us</li>
-				<li>Khaskhobor</li>
-				<li>Advertisement</li>
-				<li>Contact</li>
-			</ul>
-		</div>
-	</div>
-	<!-- THE FOOTER SECTION -->
-
-
-	<!-- THE COMPANY SECTION -->
-	<div class="row" style="background:#222;color:#eee;text-align:center;">
-		<div class="col-lg-4"></div>
-		<div class="col-lg-4" style="color:#444">
-			<small class="help-block">Powered by KM Enterprises</small>
-		</div>
-		<div class="col-lg-4"></div>
-	</div>
-	<!-- THE COMPANY SECTION -->	
+	<?= $this -> element("footer"); ?>
 
 
 

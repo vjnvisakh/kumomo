@@ -26,7 +26,14 @@
             }
         );
 
+        getAllComments();
+        
+    });
 
+
+    // THIS METHOD IS USED TO FETCH ALL THE COMMENTS FOR THIS ARTICLE
+    function getAllComments()
+    {
         $.ajax
         (
             {
@@ -50,12 +57,28 @@
         {
             console.log("complete");
         });
-        
-    });
-
+    }
 
     function commentOnArticle()
-    {           
+    {
+        if($("#inp_name").val() == undefined || $("#inp_name").val() == "")
+        {
+            $("#inp_name").focus();
+            return;
+        }
+
+        if($("#inp_email").val() == undefined || $("#inp_email").val() == "")
+        {
+            $("#inp_email").focus();
+            return;
+        }
+
+        if($("#txt_comment").val() == undefined || $("#txt_comment").val() == "")
+        {
+            $("#txt_comment").focus();
+            return;
+        }
+
         var name = $("#inp_name").val();
         var email = $("#inp_email").val();
         var comment = $("#txt_comment").val();
@@ -77,7 +100,11 @@
         )
         .done(function() 
         {
-            alert("success");
+            getAllComments();
+
+            $("#inp_name").val('');
+            $("#inp_email").val('');
+            $("#txt_comment").val('');
         })
         .fail(function() 
         {
@@ -134,11 +161,11 @@
 
 
     <!-- RELATED NEWS -->
-    <div id="related" class="row" style="background:#eee;padding:2%">        
+    <div id="related" class="row" style="background:#eee;padding:2%;margin:0.5%">        
         <div class="col-lg-12">
             <h3>Related News</h3>
             <div id="r_news">
-            
+                
             </div>
         </div>
     </div>
@@ -165,7 +192,7 @@
     <!-- AREA FOR THE COMMENT BOX -->
 
     <!-- AREA FOR PREVIOUS COMMENTS -->
-    <div id="div_comments">
+    <div id="div_comments" style="height:500px;overflow-y: scroll;">
 
     </div>
     <!-- AREA FOR PREVIOUS COMMENTS -->    
