@@ -22,12 +22,12 @@
 			border-radius:50%;
 			border:5px solid #286090;			
 			margin:2%;
-			height: 100px;
-			width: 100px;			
-			font-size:150%;
+			height: 140px;
+			width: 140px;			
+			font-size:180%;
 			background:#eee;
 			text-align: center;
-			padding-top:2%;
+			padding-top:4%;
 			font-weight: bold;			
 		}
 
@@ -47,6 +47,7 @@
 			loadAllAdvertisements();
 			loadStats();
 			loadCategories();
+			fetchSiteHits();
 
 			$("#bpublish").click(function()
 			{
@@ -180,7 +181,52 @@
 			});
 
 
-			
+			// This method is used to fetch the website hits
+			function fetchSiteHits()
+			{
+				$.ajax
+				(
+					{
+						url: <?=json_encode($this->webroot.'Admins/fetchSiteHits');?>						
+					}
+				)
+				.done(function(res) 
+				{
+					res = JSON.parse(res);
+					console.log(res);
+
+					var chart = new CanvasJS.Chart("chartContainer", 
+					{
+						animationEnabled: true,
+						theme: "light2", // "light1", "light2", "dark1", "dark2"
+						title:
+						{
+							text: "Performance"
+						},
+						axisY: 
+						{
+							title: "Page hits"
+						},
+						data: [{        
+							type: "column",  
+							showInLegend: true, 
+							legendMarkerColor: "grey",
+							legendText: "Days",
+							dataPoints: res
+						}]
+					});
+					chart.render();
+				})
+				.fail(function() 
+				{
+					console.log("error");
+				})
+				.always(function() 
+				{
+					console.log("complete");
+				});				
+			}
+
 			
 
 
@@ -452,10 +498,11 @@
   </ul>
 
 <div class="tab-content">  
+
+	<!-- STATISTICS SECTION -->
 	<div id="home" class="tab-pane fade in active" style="padding:2%">
-		<h3>Statistics</h3>
-		<p>A summary of your entire website</p>      
-		<div class="row">			
+		<br><br><br><br>
+		<div class="row" style="padding-left:22%">			
 			<div class="col-lg-1 round">
 				<div id="div_article"></div>
 				<div style="font-size:50%">Articles</div>
@@ -472,6 +519,11 @@
 				<div id="div_user"></div>
 				<div style="font-size:50%">Users</div>
 			</div>
+		</div>
+
+		<div class="row" style="padding-left:15%;padding-right:15%;padding-top:5%">
+			<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+			<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>		
 		</div>
 	</div>
 	
