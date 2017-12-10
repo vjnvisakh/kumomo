@@ -17,6 +17,22 @@
 			display: none; 
 		}
 
+		.round
+		{
+			border-radius:50%;
+			border:5px solid #286090;			
+			margin:2%;
+			height: 100px;
+			width: 100px;			
+			font-size:150%;
+			background:#eee;
+			text-align: center;
+			padding-top:2%;
+			font-weight: bold;			
+		}
+
+
+
 	</style>
 
 
@@ -168,31 +184,7 @@
 			
 
 
-			function  loadAllArticles()
-			{
-				$.ajax
-				(
-					{
-						type:"POST",
-						data:
-						{					
-							
-						},
-						url: <?=json_encode($this->webroot.'Admins/getAllArticles');?>,
-						success: function (res) 
-						{
-							$("#tbody").html(JSON.parse(res));
-							// To generate the datatable
-							$("#tab_article").DataTable();
-							// To generate the datatable
-						},
-						error: function()
-						{
-							
-						}
-					}
-				);
-			}            
+			          
 
 			function  loadAllAdvertisements()
 			{
@@ -227,11 +219,22 @@
 				$.ajax
 				(
 					{
-						type:"POST"
+						type:"POST",
 						url: <?=json_encode($this->webroot.'Admins/stats');?>,
 						success: function (res) 
-						{                            
-							$("#div_summary").html(JSON.parse(res));
+						{							
+							res = JSON.parse(res);
+							var countArr = res.split("|");
+							
+							var articles = countArr[0];
+							var categories = countArr[1];
+							var ads = countArr[2];
+							var users = countArr[3];
+
+							$("#div_article").html(articles);
+							$("#div_category").html(categories);
+							$("#div_ad").html(ads);
+							$("#div_user").html(users);
 						},
 						error: function()
 						{
@@ -348,6 +351,81 @@
 			);
 		}
 
+		function loadAllArticles()
+		{
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						
+					},
+					url: <?=json_encode($this->webroot.'Admins/getAllArticles');?>,
+					success: function (res) 
+					{
+						$("#tbody").html(JSON.parse(res));
+						// To generate the datatable
+						$("#tab_article").DataTable();
+						// To generate the datatable
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);
+		}  
+
+		// This method is used to delete the particular article
+		function deleteArticle(articleId)
+		{
+
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						articleId:articleId
+					},
+					url: <?=json_encode($this->webroot.'Admins/deleteArticle');?>,
+					success: function (res) 
+					{
+						loadAllArticles();			
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);			
+		}
+
+		// This method is used to deactivate the particular article
+		function deactivateArticle(articleId)
+		{
+
+			$.ajax
+			(
+				{
+					type:"POST",
+					data:
+					{					
+						articleId:articleId
+					},
+					url: <?=json_encode($this->webroot.'Admins/deactivateArticle');?>,
+					success: function (res) 
+					{
+						loadAllArticles();			
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);			
+		}
 
 	</script>
 
@@ -377,8 +455,23 @@
 	<div id="home" class="tab-pane fade in active" style="padding:2%">
 		<h3>Statistics</h3>
 		<p>A summary of your entire website</p>      
-		<div id="div_summary">
-
+		<div class="row">			
+			<div class="col-lg-1 round">
+				<div id="div_article"></div>
+				<div style="font-size:50%">Articles</div>
+			</div>			
+			<div class="col-lg-1 round">
+				<div id="div_category"></div>
+				<div style="font-size:50%">Categories</div>
+			</div>
+			<div class="col-lg-1 round">
+				<div id="div_ad"></div>
+				<div style="font-size:50%">Ads</div>
+			</div>
+			<div class="col-lg-1 round">
+				<div id="div_user"></div>
+				<div style="font-size:50%">Users</div>
+			</div>
 		</div>
 	</div>
 	
@@ -474,12 +567,12 @@
 					<thead>
 						<th>Id</th>
 						<th>Title</th>
-						<th>Author</th>
+						<!-- <th>Author</th> -->
 						<th>Content</th>
 						<th>Picture</th>
 						<th>Created</th>
 						<th>Status</th>
-						<th>Action</th>
+						<th style="text-align: center">Action</th>
 					</thead>
 					<tbody id="tbody">
 					</tbody>
