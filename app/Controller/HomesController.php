@@ -6,7 +6,7 @@
 	{
 		//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables
 		public $name = "Homes";
-		public $uses = array("Category","CommentsToArticle"); 
+		public $uses = array("Category","CommentsToArticle","SiteHit"); 
 		//+TANUSHREE - KM1#COMMIT#2 - Set the name, uses variables
 
 		public function isAlive()
@@ -20,6 +20,8 @@
 			header('Content-Type: text/html; charset=utf-8');
 			$this -> layout = "";
 
+			$this -> hitSite();
+
 			$navbarElements = $this -> getNavbar();    
 			$adList = $this -> getAdContentBySpaces();
 			$articleList = $this -> getArticlesByCategory();
@@ -27,6 +29,43 @@
 			$this -> set("navbarElements", $navbarElements);
 			$this -> set("adList", $adList);
 			$this -> set("articleList", $articleList);			
+		}
+
+		/**
+		* This action is used to increase the hit counter of the website
+		* It basically checks for the no of times the site has opened now
+		* @author - Visakh Vijayan
+		* @since - 10-Dec-2017
+		*
+		*/
+		public function hitSite()
+		{
+			$this -> log("HomesController -> hitSite() -> START:".microtime(true),LOG_DEBUG);
+
+			$date = date("Y-m-d");
+
+			$sql  = "";
+			$sql .= " SELECT id FROM site_hits WHERE today = '".$date."'";
+			$result = $this -> SiteHit -> query($sql);
+
+			if(!empty($result))
+			{
+				$sql  = "";
+				$sql .= " UPDATE site_hits SET hits = hits + 1 WHERE id = ".$result[0]["site_hits"]["id"];
+				$this -> SiteHit -> query($sql);
+			}
+			else
+			{
+				$siteHit["today"] = $date;
+				$siteHit["hits"] = 1;
+				$siteHit["created"] = $date;
+
+				$this -> SiteHit -> create();
+				$this -> SiteHit -> save($siteHit);
+			}
+
+			$this -> log("HomesController -> hitSite() -> END:".microtime(true),LOG_DEBUG);
+			return;
 		}
 
 		// THIS ACTION IS USED TO VIEW THE ARTICLE

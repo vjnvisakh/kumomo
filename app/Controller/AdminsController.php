@@ -5,7 +5,7 @@
 	class AdminsController extends AppController
 	{
 		public $name = "Admins"; //TANUSHREE - KM#1COMMIT#2 - Set the name variable
-		public $uses = array("Article","Ad","User","Category","ArticlesToCategory");
+		public $uses = array("Article","Ad","User","Category","ArticlesToCategory","SiteHit");
 
 		public function isAlive()
 		{
@@ -128,7 +128,7 @@
 						$tablerows .= "<td style='color:red'>".ucfirst($article["articles"]["status"])."</td>";
 					}
 					
-					$tablerows .= "<td style='text-align:center'><a onclick='deleteArticle(".$article["articles"]["id"].")'><i class='fa fa-trash-o' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='deactivateArticle(".$article["articles"]["id"].")'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> </td>";
+					$tablerows .= "<td style='text-align:center'><a style='cursor:pointer' onclick='deleteArticle(".$article["articles"]["id"].")'><i class='fa fa-trash-o' aria-hidden='true'></i></a>&nbsp;&nbsp;&nbsp;<a style='cursor:pointer'  onclick='deactivateArticle(".$article["articles"]["id"].")'><i class='fa fa-eye-slash' aria-hidden='true'></i></a> </td>";
 					$tablerows .= "</tr>";
 					$row++;
 				}
@@ -332,7 +332,7 @@
 				$userCount = $this -> Article -> query($sql);
 
 				$count = $articleCount[0][0]["cnt"]."|".$categoryCount[0][0]["cnt"]."|".$adCount[0][0]["cnt"];
-				$count .= "|". $userCount[0][0]["cnt"];
+				$count .= "|". $userCount[0][0]["cnt"];				
 
 				echo json_encode($count);
 			}
@@ -344,6 +344,42 @@
 			$this -> log("AdminsController -> stats() -> END:".microtime(true),LOG_DEBUG);
 			exit();
 		}
+
+		/**
+		* This action is used to obtain the site hits
+		* @author - Visakh Vijayan
+		* @since - 10-Dec-2017
+		*/
+		public function fetchSiteHits()
+		{
+			$this -> log("AdminsController -> stats() -> START:".microtime(true),LOG_DEBUG);
+
+			if($this -> isLoggedIn())
+			{
+				$sql  = "";
+				$sql .= " SELECT today,hits FROM site_hits";
+				$results = $this -> SiteHit -> query($sql);
+
+				$hits = [];
+				$i = 0;
+				foreach($results as $result)
+				{
+					$hits[$i]["label"] = date("d-M",strtotime($result["site_hits"]["today"]));
+					$hits[$i]["y"] = intval($result["site_hits"]["hits"]);
+					$i++;
+				}
+
+				echo json_encode($hits);
+			}
+			else
+			{
+				$this -> redirect(array("action" => "index"));
+			}
+
+			$this -> log("AdminsController -> stats() -> END:".microtime(true),LOG_DEBUG);
+			exit();
+		}
+
 
 		// ADD NEW CATEGORIES
 		public function addCategory()
