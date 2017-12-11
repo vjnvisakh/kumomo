@@ -42,6 +42,11 @@
     		display: none; 
 		}
 
+		.dropdown-menu
+		{
+			background-color: #286090 !important;
+		}
+
 	</style>
 
 
@@ -70,7 +75,7 @@ $children = array();
 				<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<a class="navbar-brand" href="#">Khashkhobor</a>
+				<a class="navbar-brand" href="#">Khashkhobar</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
