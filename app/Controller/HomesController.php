@@ -248,9 +248,8 @@
 
 			$this -> log("HomesController -> fetchRecentCategories() -> END:".microtime(true),LOG_DEBUG);
 		}
-	}
 
-        /**
+		/**
         * This action is used to render the carousel structure
         * 
         * @param <limit> [Number of articles to be displayed]
@@ -293,7 +292,6 @@
             
             return $articleList;
         }
-
-    }
+	}
 
 ?>
