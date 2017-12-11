@@ -11,7 +11,7 @@
 		<img height="70" width="70" src="<?=$this->webroot.'/images/logo.png'?>">
 	</div>
 	<div class="col-lg-11" style="color:#fff;margin-left:-1%">
-		<h2>Khaskhobor.in</h2>	
+		<h2>Khashkhobar.in</h2>	
 		<p>Your news stop</p>
 	</div>
 </div>
