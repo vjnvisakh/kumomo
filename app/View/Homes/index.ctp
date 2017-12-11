@@ -163,10 +163,8 @@ $children = array();
 
 
 	<!-- THE CENTER PANEL -->
-		<div class="col-lg-7 text-center"style="border:1px solid #222;padding:5%">
-			<h3>
-				COVER PIC
-			</h3>
+		<div id="carouselDiv" class="col-lg-7 text-center"style="padding:1%">
+			<!-- CAROUSEL GOES HERE -->
 		</div>
 	<!-- THE CENTER PANEL -->
 
