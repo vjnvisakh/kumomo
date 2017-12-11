@@ -330,6 +330,36 @@ $children = array();
 </body>
 <script>
 
+	$(document).ready(function()
+	{
+		reloadCarousel();
+    	setInterval(reloadCarousel, 120000);
+
+    	function reloadCarousel()
+		{
+			$.ajax
+			(
+				{
+					type:"POST",
+					data: {limit : 5},
+					url: <?=json_encode($this -> webroot . "homes/getArticlesForCarousel");?>,
+					success: function (res) 
+					{
+						$("#carouselDiv").html(res);
+						$(".carousel").carousel({
+							interval: 5000
+							
+						});
+					},
+					error: function()
+					{
+						
+					}
+				}
+			);
+    	}
+});
+
 	function registerClick(url, adId)
 	{
 		$.ajax
@@ -337,7 +367,7 @@ $children = array();
 			{
 				type:"POST",
 				data: {adId: adId},
-				url: <?=json_encode($this -> webroot.'ads/registerClick');?>,
+				url: <?=json_encode($this -> webroot . "ads/registerClick");?>,
 				success: function (res) 
 				{
 					window.open(url).focus();
