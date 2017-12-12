@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Khashkhobar</title>
+  <title>Khashkhobar.in</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
@@ -79,7 +79,7 @@
 </head>
 <body>
 
-<div class="container-fluid" style="background:#343434;border-top:5px solid #404040"> 
+<div class="container-fluid" style="background:#343434;border-top:5px solid #404040;padding-left:10%"> 
 	<?= $this -> element("header"); ?>
 </div>
 
@@ -95,13 +95,12 @@ $children = array();
 	if(!empty($navbarElements))
 	{
 ?>
-		<nav style="background:#286090" class="navbar navbar-expand-sm navbar-dark sticky-top navbar-toggleable-md">
+		<nav style="background:#286090;padding-left:10%;height:30px;font-size:90%" class="navbar navbar-expand-sm navbar-dark sticky-top navbar-toggleable-md">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
 					<span class="navbar-toggler-icon"></span>
-				</button>
-				<a class="navbar-brand" href="#">Khashkhobar</a>
+				</button>				
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
@@ -163,12 +162,12 @@ $children = array();
 	
 </nav>
 
-
-<div class="container-fluid">
+<br>
+<div class="container-fluid" style="padding-left:10%;padding-right:10%">
 
 	<div class="row">
 	<!-- THE LEFT AD PANEL -->
-		<div class="col-lg-2" style="padding:1%">
+		<div class="col-lg-3" style="padding:1%;border:1px solid #eee">
 <?php
 			if(isset($adList[1]))
 			{
@@ -196,20 +195,9 @@ $children = array();
 
 
 	<!-- THE RIGHT DETAILS PANEL -->
-		<div class="col-lg-3">
+		<div class="col-lg-3" style="border:1px solid #eee">
 
-				<!-- THE DETAILS BOX -->
-				<div class="row" style="background:#E4E4E4;padding-top:5%;">					
-					<ul style="list-style-type:none">
-						<h4>Get in Touch</h4>
-						<li>Home</li>
-						<li>About Us</li>
-						<li>Khaskhobor</li>
-						<li>Advertisement</li>
-						<li>Contact</li>
-					</ul>
-				</div>
-				<!-- THE DETAILS BOX -->			
+						
 
 		</div>
 	<!-- THE RIGHT DETAILS PANEL -->
