@@ -30,7 +30,33 @@
   			.always(function() {
   				console.log("complete");
   			});
-  			
+
+		   	function reloadCarousel()
+			{
+				$.ajax
+				(
+					{
+						type:"POST",
+						data: {limit : 5},
+						url: '<?=$this -> webroot . "homes/getArticlesForCarousel"?>',
+						success: function (res) 
+						{
+							$("#carouselDiv").html(res);
+							$(".carousel").carousel({
+								interval: 5000
+							
+							});
+						},
+						error: function()
+						{
+						
+						}
+					}
+				);
+	    	}
+
+			reloadCarousel();
+	    		setInterval(reloadCarousel, 120000);  			
   		});
 
   </script>
@@ -327,36 +353,6 @@ $children = array();
 </div>
 </body>
 <script>
-
-	$(document).ready(function()
-	{
-		reloadCarousel();
-    	setInterval(reloadCarousel, 120000);
-
-    	function reloadCarousel()
-		{
-			$.ajax
-			(
-				{
-					type:"POST",
-					data: {limit : 5},
-					url: <?=json_encode($this -> webroot . "homes/getArticlesForCarousel");?>,
-					success: function (res) 
-					{
-						$("#carouselDiv").html(res);
-						$(".carousel").carousel({
-							interval: 5000
-							
-						});
-					},
-					error: function()
-					{
-						
-					}
-				}
-			);
-    	}
-});
 
 	function registerClick(url, adId)
 	{
