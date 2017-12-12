@@ -5,7 +5,7 @@
 	class CategoriesController extends AppController
 	{		
 		public $name = "Categories";
-		public $uses = array("Category","CommentsToArticle","SiteHit"); 		
+		public $uses = array("Article", "ArticlesToCategory", "Category", "CommentsToArticle", "SiteHit"); 		
 
 		public function isAlive()
 		{
@@ -52,5 +52,50 @@
 			$this -> log("CategoriesController -> index() -> END:".microtime(true),LOG_DEBUG);			
 		}
 
+		//+T
+		public function getFeaturedSections()
+		{
+			$this -> layout = "";
+			$categoryQuery = "SELECT count(*), atoc.category_id, c.title
+								FROM articles_to_categories atoc
+									INNER JOIN categories c ON atoc.category_id = c.id
+								WHERE c.status = 'active'
+								GROUP BY category_id
+								ORDER BY 1 DESC
+								LIMIT 4";
+			$categoryList = $this -> ArticlesToCategory -> query($categoryQuery);
+
+			//pr($categoryList);
+
+			$featuredSectionList = array();
+			$index = 0;
+
+			foreach($categoryList as $category)
+			{
+				$categoryId = $category["atoc"]["category_id"];
+
+				$featuredSectionList[$index]["category"]["id"] = $categoryId;
+				$featuredSectionList[$index]["category"]["title"] = $category["c"]["title"];
+
+				$articleQuery = "SELECT a.id,
+										a.title,
+										a.content,
+										a.photo,
+										a.photo_caption
+									FROM articles a
+										INNER JOIN articles_to_categories atoc ON a.id = atoc.article_id
+									WHERE atoc.category_id = $categoryId AND a.status = 'active'
+									LIMIT 5";
+				$articleList = $this -> Article -> query($articleQuery);
+
+				$featuredSectionList[$index]["articles"] = $articleList;
+				$index++;
+			}
+
+			//pr($featuredSectionList);
+			$this -> set("featuredSectionList", $featuredSectionList);
+			$this -> render("/Elements/featured_section");
+		}
+		//-T
 	}
 ?>

@@ -31,6 +31,23 @@
   				console.log("complete");
   			});
 
+			$.ajax
+  			(
+  				{
+  					url: '<?=$this->webroot.'categories/getFeaturedSections'?>'  					
+  				}
+  			)
+  			.done(function(res) 
+  			{  				
+  				$("#featured_categories").html(res);
+  			})
+  			.fail(function() {
+  				console.log("error");
+  			})
+  			.always(function() {
+  				console.log("complete");
+  			});
+
 		   	function reloadCarousel()
 			{
 				$.ajax
@@ -122,7 +139,7 @@ $children = array();
 					{
 ?> 						
 						<li class="dropdown">
-							<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+							<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>">
 								<?=$option["value"]["title"]?>
 								<span class="caret"></span></a>
 							</a>
@@ -136,7 +153,7 @@ $children = array();
 					{
 ?>
 						<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>" class="nav-link">
 								<?=$option["value"]["title"]?>
 						</a>
 						</li>
@@ -246,65 +263,21 @@ $children = array();
 
 	<br />
 	<!-- THE NEWS IN BRIEF  -->
-<?php
-	if(!empty($articleList))
-	{
-		//pr($articleList);
-		$articleCount = count($articleList);
-?>
-		<div class="row">
-		<div class="col-lg-9" style="border:1px solid #222;padding:3%">
-			<h3 align="center">Latest News</h3>
-			<div class="row" style="margin-bottom:1%">				
-				<div class="col-lg-2" style="padding:1%">
-					<a target="_blank" href="<?php echo $this -> webroot . 'homes/article/' . $articleList[0]["a"]["id"] ?>">
-						<img 
-							style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" 
-							src="<?php echo $this -> webroot . 'images/articles/' . $articleList[0]["a"]["photo"]?>" 
-							alt='<?=$articleList[0]["a"]["title"]?>' />
-					</a>
-				</div>
-				<div class="col-lg-10" style="padding:5%">
-					<ul>
-<?php
-				for($index = 0; $index < $articleCount; $index++)
-				{
-?>
-					<li type="square"><h6>
-						<a style="color:black;" target="_blank" href="<?php echo $this -> webroot . 'homes/article/' . $articleList[$index]["a"]["id"] ?>">
-							<?=$articleList[$index]["a"]["title"]?>
-						</a>
-					</h6></li>
-<?php
-				}
-?>
-				</ul>
-				</div>
-			</div>
-<!-- COMMENTED OUT CODE IN CASE WE NEED THE ARTICLES IN SEPARATE DIVS -->
-<!-- <?php
-		for($index = 1; $index < $articleCount; $index++)
-		{
-?>
-			<div class="row" style="margin-bottom:1%">				
-					<div class="col-lg-2" style="padding:5%;"></div>
-					<div class="col-lg-10" style="padding:5%">
-					<h6>
-						<a style="color:black;" target="_blank" href="<?php echo $this -> webroot . 'homes/articles/' . $articleList[$index]["a"]["id"] ?>">
-							<?=$articleList[$index]["a"]["title"]?>
-						</a>
-					</h6>
-				</div>
-			</div>
-<?php
-		}
-?> -->
-		</div>
-<?php
-	}
-?>
-	
 
+		<div class="row" style="padding:1%">
+			<div class="col-lg-8" style="border:1px solid #eee;color:#fff">
+				<div class="row" style="background:#000;padding:1%;">
+					<div class="col-lg-10">
+						<span>Featured Sections</span>
+					</div>
+				</div>				
+				<div class="row" style="padding:2%" >
+				<div class="col-lg-12" id="featured_categories" style="color: #000; !important">
+				</div>
+			</div>				
+		</div>
+
+		<div class="col-lg-1"></div>
 		<div class="col-lg-3 text-center" style="padding:1%">
 <?php
 			if(isset($adList[3]))
