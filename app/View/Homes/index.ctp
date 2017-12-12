@@ -139,7 +139,7 @@ $children = array();
 					{
 ?> 						
 						<li class="dropdown">
-							<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>">
+							<a target="_blank" class="dropdown-toggle nav-link" data-toggle="dropdown" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>">
 								<?=$option["value"]["title"]?>
 								<span class="caret"></span></a>
 							</a>
@@ -153,7 +153,7 @@ $children = array();
 					{
 ?>
 						<li class="nav-item">
-						<a href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>" class="nav-link">
+						<a target="_blank" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>" class="nav-link">
 								<?=$option["value"]["title"]?>
 						</a>
 						</li>

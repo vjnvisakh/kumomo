@@ -51,7 +51,7 @@
         })
         .fail(function() 
         {
-            alert("Oops");
+            console.log("Oops");
         })
         .always(function() 
         {

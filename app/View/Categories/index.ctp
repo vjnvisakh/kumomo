@@ -37,7 +37,11 @@
 								<img style="border:5px solid #fff;box-shadow:0px 1px 1px" width="160" height="160" src="<?=$this->webroot.'images/articles/'.$article['a']['photo']?>">
 							</div>
 							<div class="col-lg-9" style="border:1px solid #fff;padding:4%">
-								<h5><b><?=$article["a"]["title"]; ?></b></h5>
+								<h5>
+									<a style="text-decoration: none; color: #000;" target="_blank" href='<?=$this -> webroot . "homes/article/" . $article["a"]["id"]?>'>
+										<b><?=$article["a"]["title"]; ?></b>
+									</a>	
+								</h5>
 								<p style="text-align:justify;">		
 									<span class="help-block" style="font-size:80%;color:#aaa">
 										<?=date("F jS",strtotime($article["a"]["created"])); ?>
