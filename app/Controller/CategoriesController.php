@@ -88,7 +88,16 @@
 									LIMIT 5";
 				$articleList = $this -> Article -> query($articleQuery);
 
-				$featuredSectionList[$index]["articles"] = $articleList;
+				if(empty($articleList))
+				{
+					unset($featuredSectionList[$index]);
+					$index--;
+				}
+				else
+				{
+					$featuredSectionList[$index]["articles"] = $articleList;
+				}
+				
 				$index++;
 			}
 

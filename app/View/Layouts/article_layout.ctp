@@ -19,7 +19,6 @@
 
 	</style>
 
-
 </head>
 <body>
 
@@ -27,37 +26,18 @@
 	<?= $this -> element("header"); ?>
 </div>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
-  <a class="navbar-brand" href="#">Logo</a>
-  <ul class="navbar-nav">
-	<li class="nav-item">
-	  <a class="nav-link" href="#">Link</a>
-	</li>
-	<li class="nav-item">
-	  <a class="nav-link" href="#">Link</a>
-	</li>
-  </ul>
-</nav>
-
-
-<div class="container-fluid">
+<div class="container-fluid" style="margin:0px;padding:0px">
 	<div class="row">
-
-	  <div class="col-lg-9" style="padding:2%">        
+	  <div class="col-lg-9" style="padding:5%">        
 		<?= $this->fetch('content'); ?>
 	  </div>
-
 	  <div class="col-lg-3" style="border:1px solid #eee">
-		<h2>AD SPACE 1</h2>
+		
 	  </div>
 	</div>	
 </div>
 
-
-<div class="container-fluid" style="margin-top:10%">
-	<!-- FOOTER SECTION -->
-	<?= $this -> element("footer"); ?>	
-	<!-- FOOTER SECTION -->
-</div>
-
+<footer>
+		<center><?= $this -> element("footer"); ?></center>
+</footer>
 </body>

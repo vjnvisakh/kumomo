@@ -1,8 +1,5 @@
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script> -->
 <?php 
+	
 	if(!empty($articleList))
 	{
 ?>
@@ -48,7 +45,7 @@
 <?php
 					}
 ?>
-							<img src="images/articles/<?=$value["Article"]["photo"]?>" alt="<?=$value["Article"]["title"]?>" style="min-height: 400px; width:100%; max-height:400px">
+							<img src="/images/articles/<?=$value["Article"]["photo"]?>" alt="<?=$value["Article"]["title"]?>" style="height:350px; width:620px;border:10px solid #eee">
 							<div class="carousel-caption">
 									<h3><?=$value["Article"]["title"]?></h3>
 							</div>

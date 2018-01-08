@@ -52,6 +52,12 @@
 			$("#bpublish").click(function()
 			{
 				var articleDetails = {};
+
+				if($.trim($("#ttitle").val()) == "" || $.trim($("#ttext").val()) == "")
+				{
+					alert("Please enter the title and content for the article.");
+					return false;
+				}
 				
 				articleDetails["title"] = $("#ttitle").val();
 				articleDetails["content"] = $("#ttext").val();
@@ -63,6 +69,11 @@
 					articleDetails["categories"].push($(this).val()); 
 				});
 
+				if(articleDetails["categories"].length == 0)
+				{
+					alert("Please select atleast one category.");
+					return false;
+				}
 				var articleJSON = JSON.stringify(articleDetails);
 
 				var articleData = new FormData($("#articleFileUpload")[0]);
@@ -365,7 +376,7 @@
 					url: <?=json_encode($this->webroot.'Admins/getAllArticles');?>,
 					success: function (res) 
 					{
-						$("#tbody").html(JSON.parse(res));
+						$("#arTbody").html(res);
 						// To generate the datatable
 						$("#tab_article").DataTable();
 						// To generate the datatable
@@ -595,9 +606,9 @@
 				<br />
 				<div class="row" style="margin-bottom:3%">
 					<div class="col-lg-4 form-group">
-						<input id="ttitle" type="text" class="form-control" placeholder="Title of the article" /><br />
+						<input required id="ttitle" type="text" class="form-control" placeholder="Title of the article" /><br />
 						<!-- <input id="tcat" type="text" class="form-control" placeholder="Category to which it belongs" /><br /> -->
-						<select id="tcat" class="form-control" name="tcat" multiple>
+						<select id="tcat" class="form-control" name="tcat" required multiple>
 <?php
 						foreach($categories as $category)
 						{
@@ -642,7 +653,7 @@
 						<th>Status</th>
 						<th style="text-align: center">Action</th>
 					</thead>
-					<tbody id="tbody">
+					<tbody id="arTbody">
 					</tbody>
 				</table>
 			</div>

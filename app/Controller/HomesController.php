@@ -120,13 +120,13 @@
 
 				foreach($articles as $article)
 				{                    
-					$temp .= "<div class='col-lg-2' style='border:1px solid #ddd;margin-right:5%'>";
-					$temp .= "<div class='row'>";
-					$temp .= "<img height='140' width='140' src='".$this->webroot."/images/articles/".$article["a"]["photo"]."' />";
-					$temp .= "</div>";
-					$temp .= "<div class='row' style='background:#fff;border-top:1px solid #eee'>";
+					$temp .= "<div class='col-lg-2' style='margin-right:5%'>";
+					//$temp .= "<div class='row'>";
+					//$temp .= "<img height='140' width='140' src='".$this->webroot."/images/articles/".$article["a"]["photo"]."' />";
+					//$temp .= "</div>";
+					$temp .= "<div class='row' style='background:#fff;'>";
 					$temp .= "<a href='".$this -> webroot."Homes/article/".$article["a"]["id"]."'>";
-					$temp .= "<span>".$article["a"]["title"]."</span>";
+					$temp .= "<span style='color:#222'>".$article["a"]["title"]."</span>";
 					$temp .= "</a>";
 					$temp .= "</div>";
 					$temp .= "</div>";                    
@@ -237,9 +237,13 @@
 			$this -> log("HomesController -> fetchRecentCategories() -> START:".microtime(true),LOG_DEBUG);
 			$this -> layout = "";
 
-			$sql  = "";
-			$sql .= " select c.id,c.title,count(atc.article_id) from categories c inner join articles_to_categories";
-			$sql .= " atc on c.id = atc.category_id group by atc.category_id order by 2 desc limit 8";
+			$sql  = "SELECT c.id, c.title, count(atc.article_id)
+						FROM categories c
+							INNER JOIN articles_to_categories atc ON c.id = atc.category_id
+						WHERE atc.status = 'active'
+						GROUP BY atc.category_id
+						ORDER BY 2 DESC
+						LIMIT 8";
 
 			$categories = $this -> Article -> query($sql);
 
@@ -291,6 +295,66 @@
 			$articleList = $this -> Article -> query($articleQuery);
 		
 			return $articleList;
+		}
+
+		/**
+		 * This action is used to show the about us page of the website
+		 * @author Visakh Vijayan
+		 * @since 02-Jan-2018
+		 */
+		public function about()
+		{
+			$this -> log("HomesController -> about() -> START: " . microtime(true), LOG_DEBUG);
+			
+			// Selecting the layout file
+			$this -> layout = "basic";
+
+			$this -> log("HomesController -> about() -> END: " . microtime(true), LOG_DEBUG);
+		}
+
+		/**
+		 * This action is used to show the editorial board page of the website
+		 * @author Visakh Vijayan
+		 * @since 02-Jan-2018
+		 */
+		public function editorialBoard()
+		{
+			$this -> log("HomesController -> editorialBoard() -> START: " . microtime(true), LOG_DEBUG);
+			
+			// Selecting the layout file
+			$this -> layout = "basic";
+
+			$this -> log("HomesController -> editorialBoard() -> END: " . microtime(true), LOG_DEBUG);
+		}
+
+		/**
+		 * This action is used to show the editorial page of the website
+		 * @author Visakh Vijayan
+		 * @since 02-Jan-2018
+		 */
+		public function editorial()
+		{
+			$this -> log("HomesController -> editorial() -> START: " . microtime(true), LOG_DEBUG);
+			
+			// Selecting the layout file
+			$this -> layout = "basic";
+
+			$this -> log("HomesController -> editorial() -> END: " . microtime(true), LOG_DEBUG);
+		}
+
+		/**
+		 * This action is used to show the contact page of the website
+		 * @author Visakh Vijayan
+		 * @since 02-Jan-2018
+		 */
+		public function contact()
+		{
+			$this -> log("HomesController -> contact() -> START: " . microtime(true), LOG_DEBUG);
+			
+			// Selecting the layout file
+			$this -> layout = "basic";
+
+			$this -> log("HomesController -> contact() -> END: " . microtime(true), LOG_DEBUG);
 		}
 	}
 

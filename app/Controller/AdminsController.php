@@ -85,18 +85,19 @@
 			return(1);
 		}
 
-		// THIS ACTION GETS ALL THE ARTICLES IN THE DATABASE FOR THE ADMIN
+		/**
+		 * This action gets all the articles in the database
+		 * @author Visakh Vijayan
+		 */
 		public function getAllArticles()
-		{
+		{			
 			$this -> log("AdminsController -> getAllArticles() -> START:".microtime(true),LOG_DEBUG);
 
-			if($this->isLoggedIn())
-			{
+			if($this -> isLoggedIn())
+			{				
 				$getAllArticles  = "";
 				$getAllArticles .= " SELECT * FROM articles ORDER BY ID DESC";
 				$allArticles = $this -> Article -> query($getAllArticles);
-
-				$this -> log($allArticles,LOG_DEBUG);
 
 				$tablerows = "";
 				$row = 1;
@@ -105,9 +106,9 @@
 				{
 					$tablerows .= "<tr>";
 					$tablerows .= "<td>".$row."</td>";
-					$tablerows .= "<td>".$article["articles"]["title"]."</td>";
-					//$tablerows .= "<td>".$article["articles"]["created_by"]."</td>";
-					$tablerows .= "<td>".substr($article["articles"]["content"],0,50).". . .</td>"; 
+					$tablerows .= "<td>".$article["articles"]["title"]."</td>";					
+					$tablerows .= "<td>".substr($article["articles"]["content"],0,50).". . .</td>";
+
 					if(!empty($article["articles"]["photo"]))
 					{
 						$tablerows .= "<td><a href='" . $this -> webroot . "images/articles/";
@@ -117,6 +118,7 @@
 					{
 						$tablerows .= "<td>No image was attached</td>";
 					}
+
 					$tablerows .= "<td>".date("d-M-y",strtotime($article["articles"]["created"]))."</td>";
 
 					if($article["articles"]["status"] == "active")
@@ -132,8 +134,8 @@
 					$tablerows .= "</tr>";
 					$row++;
 				}
-
-				echo json_encode($tablerows);
+				
+				echo $tablerows;
 			}
 			else 
 			{

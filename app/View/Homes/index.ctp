@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Khashkhobar.in</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
-  <script type="text/javascript">
-  		
-  		$(document).ready(function()
-  		{
+	<title>Khashkhobar.in</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		
+		$(document).ready(function()
+			{
 
-  			$.ajax
-  			(
-  				{
-  					url: '<?=$this->webroot.'Homes/fetchRecentCategories'?>'  					
-  				}
-  			)
-  			.done(function(res) 
-  			{  				
-  				$("#latest_categories").html(res);
-  			})
-  			.fail(function() {
-  				console.log("error");
-  			})
-  			.always(function() {
-  				console.log("complete");
-  			});
+				$.ajax
+				(
+					{
+						url: '<?=$this->webroot.'Homes/fetchRecentCategories'?>'            
+					}
+				)
+				.done(function(res) 
+				{         
+					$("#latest_categories").html(res);
+				})
+				.fail(function() {
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
 
-			$.ajax
-  			(
-  				{
-  					url: '<?=$this->webroot.'categories/getFeaturedSections'?>'  					
-  				}
-  			)
-  			.done(function(res) 
-  			{  				
-  				$("#featured_categories").html(res);
-  			})
-  			.fail(function() {
-  				console.log("error");
-  			})
-  			.always(function() {
-  				console.log("complete");
-  			});
+		$.ajax
+		(
+			{
+				url: '<?=$this->webroot.'categories/getFeaturedSections'?>'           
+			}
+		)
+		.done(function(res) 
+		{         
+			$("#featured_categories").html(res);
+		})
+		.fail(function() 
+		{
+			console.log("error");
+		});
 
-		   	function reloadCarousel()
+				function reloadCarousel()
 			{
 				$.ajax
 				(
@@ -70,178 +67,66 @@
 						}
 					}
 				);
-	    	}
+				}
 
-			reloadCarousel();
-	    		setInterval(reloadCarousel, 120000);  			
-  		});
+					reloadCarousel();
+					setInterval(reloadCarousel, 120000);        
+			});
 
-  </script>
-
-	<style>
+	</script>
+	<style type="text/css">
 		
-		::-webkit-scrollbar 
-		{ 
-    		display: none; 
-		}
-
-		.dropdown-menu
-		{
-			background-color: #286090 !important;
-		}
+	::-webkit-scrollbar 
+	{
+		width: 0px;  /* remove scrollbar space */
+		background: transparent;  /* optional: just make scrollbar invisible */
+	}
 
 	</style>
-
-
 </head>
-<body>
+<body style="background:#FBFBF1">
 
-<div class="container-fluid" style="background:#343434;border-top:5px solid #404040;padding-left:10%"> 
-	<?= $this -> element("header"); ?>
-</div>
+	<div class="container-fluid">
+		<?= $this -> element("header"); ?>
+	</div>
 
-<?php
-$html = "";
-$parent = 0;
-$parentStack = array();
-
-// $navbarElements contains the results of the SQL query
-$children = array();
-//print_r($navbarElements);
-
-	if(!empty($navbarElements))
-	{
-?>
-		<nav style="background:#286090;padding-left:10%;height:30px;font-size:90%" class="navbar navbar-expand-sm navbar-dark sticky-top navbar-toggleable-md">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
-					<span class="navbar-toggler-icon"></span>
-				</button>				
-			</div>
-			<div class="collapse navbar-collapse" id="myNavbar">
-			<ul class="nav navbar-nav">
-<?php
-	}
-	foreach ( $navbarElements as $navbarElement)
-	{
-		$children[$navbarElement["categories"]["parent_id"]][] = $navbarElement["categories"];
-	}
-	//pr($children);
-	while(($option = each($children[$parent])) || ($parent > 0))
-	{
-		//print_r($option);
-			if (!empty($option))
-			{
-					// 1) The item contains children:
-					// store current parent in the stack, and update current parent
-					if(!empty($children[$option["value"]["id"]]))
-					{
-?> 						
-						<li class="dropdown">
-							<a target="_blank" class="dropdown-toggle nav-link" data-toggle="dropdown" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>">
-								<?=$option["value"]["title"]?>
-								<span class="caret"></span></a>
-							</a>
-						<ul class="dropdown-menu">
-<?php
-							array_push($parentStack, $parent);
-							$parent = $option["value"]["id"];
-					}
-					// 2) The item does not contain children
-					else
-					{
-?>
-						<li class="nav-item">
-						<a target="_blank" href="<?=$this -> webroot . 'categories/index/' . $option["value"]["id"]?>" class="nav-link">
-								<?=$option["value"]["title"]?>
-						</a>
-						</li>
-<?php
-					}
-							
-			}
-			// 3) Current parent has no more children:
-			// jump back to the previous menu level
-			else
-			{
-?>
-				</ul>
-				</li>
-<?php
-					$parent = array_pop($parentStack);
-			}
-	}
-?>
+<!-- <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+	<a class="navbar-brand" href="#">Logo</a>
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<a class="nav-link" href="#">Link</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">Link</a>
+		</li>
 	</ul>
-	</div>
-	</div>
+</nav> -->
 	
-</nav>
-
-<br>
-<div class="container-fluid" style="padding-left:10%;padding-right:10%">
-
-	<div class="row">
-	<!-- THE LEFT AD PANEL -->
-		<div class="col-lg-3" style="padding:1%;border:1px solid #eee">
-<?php
+<div class="container-fluid" style="padding:0px;margin:0px">
+	<div class="row" style="background: #fff">
+		<div class="col-sm-3 text-center" style="padding:3%;background: #fff">
+			<?php
+			
 			if(isset($adList[1]))
 			{
 				$currAd = $adList[1];
 ?>
 				<a href="javascript:void(0);" onclick="registerClick('<?=$currAd["link"]?>', <?=$currAd["id"]?>);">
-					<img style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
+					<img style="height:280px;width:280px;border:1px solid #222" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
 				</a>
 <?php
 			}
 			else 
 			{
-				echo "<h3>AD SPACE 1</h3>";
+				
 			}
 ?>
 		</div>
-	<!-- THE LEFT AD PANEL -->
-
-
-	<!-- THE CENTER PANEL -->
-		<div id="carouselDiv" class="col-lg-7 text-center"style="padding:1%">
-			<!-- CAROUSEL GOES HERE -->
-		</div>
-	<!-- THE CENTER PANEL -->
-
-
-	<!-- THE RIGHT DETAILS PANEL -->
-		<div class="col-lg-3" style="border:1px solid #eee">
-
-						
-
-		</div>
-	<!-- THE RIGHT DETAILS PANEL -->
-	</div>
-
-
-	<br />
-	<div class="row" style="padding:1%">
-
-			<div class="col-lg-8" style="border:1px solid #eee;color:#fff">
-				<div class="row" style="background:#286090;padding:1%;">
-					<div class="col-lg-10">
-						<span>Popular Categories</span>
-					</div>
-					<div class="col-lg-2 text-right">
-						<span style="font-size:90%">more</span>
-					</div>
-				</div>				
-				<div class="row" style="padding:2%" id="latest_categories">
-					
-				</div>
-			</div>
+		<div class="col-sm-6" id="carouselDiv">
 			
-			<div class="col-lg-1"></div>
-			<!-- THE RIGHT SIDE AD -->
-			<div class="col-lg-3" style="padding:1%;border:1px solid #eee">
-<?php
+		</div>
+		<div class="col-sm-3" style="background:#FBFBF1">
+			<?php
 			if(isset($adList[2]))
 			{
 				$currAd = $adList[2];
@@ -253,86 +138,53 @@ $children = array();
 			}
 			else 
 			{
-				echo "<h3>AD SPACE 2</h3>";
+				
 			}
 ?>
-			</div>
-			<!-- THE RIGHT SIDE AD -->
-
+		</div>
 	</div>
 
-	<br />
-	<!-- THE NEWS IN BRIEF  -->
+	<div class="row">
+		<div class="col-sm-9" style="padding:3%;background:#fff">
+			<h2><b>বিভাগ</b></h2>
+			<div class="row" id="latest_categories" style="padding:2%">
 
-		<div class="row" style="padding:1%">
-			<div class="col-lg-8" style="border:1px solid #eee;color:#fff">
-				<div class="row" style="background:#000;padding:1%;">
-					<div class="col-lg-10">
-						<span>Featured Sections</span>
-					</div>
-				</div>				
-				<div class="row" style="padding:2%" >
-				<div class="col-lg-12" id="featured_categories" style="color: #000; !important">
-				</div>
-			</div>				
+			</div>
 		</div>
-
-		<div class="col-lg-1"></div>
-		<div class="col-lg-3 text-center" style="padding:1%">
-<?php
+		<div class="col-sm-3" style="background:#FBFBF1;padding:2%">
+			<?php
 			if(isset($adList[3]))
 			{
 				$currAd = $adList[3];
 ?>
 				<a href="javascript:void(0);" onclick="registerClick('<?=$currAd["link"]?>', <?=$currAd["id"]?>);">
-					<img style="max-width : 100%; max-height: 100%; min-width : 100%; min-height: 100%;" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
+					<img style="border:1px solid #222;height:250px;width:280px" src="<?php echo $this -> webroot. 'images/ads/' . $currAd["photo"]?>" alt='<?=$currAd["alt"]?>' />
 				</a>
 <?php
 			}
 			else 
 			{
-				echo "<h3>AD SPACE 3</h3>";
+				
 			}
 ?>
 		</div>
 	</div>
-	<!-- THE NEWS IN BRIEF  -->
-	
-	<br />
 
-
-
-
-
-	<?= $this -> element("footer"); ?>
-
-
-
-
-
+	<!-- THE FEATURED SECTION -->
+	<div class="row">
+		<div class="col-sm-9" id="featured_categories" style="background:#fff;padding-bottom:5%">
+			
+		</div>    
+		<div class="col-sm-3">
+			<!-- AD SPACE -->
+		</div>
+	</div>
+	<!-- THE FEATURED SECTION -->
 
 </div>
-</body>
-<script>
 
-	function registerClick(url, adId)
-	{
-		$.ajax
-		(
-			{
-				type:"POST",
-				data: {adId: adId},
-				url: <?=json_encode($this -> webroot . "ads/registerClick");?>,
-				success: function (res) 
-				{
-					window.open(url).focus();
-				},
-				error: function()
-				{
-					
-				}
-			}
-		); 
-	}
-</script>
+<footer>
+		<center><?= $this -> element("footer"); ?></center>
+</footer>
+</body>
 </html>

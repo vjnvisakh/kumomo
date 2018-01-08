@@ -1,73 +1,51 @@
-<?php 
+<?php
+
+	$renderHTML = "<ul id='featured' class='list-group'>";
+	$renderHTML .= "<div class='row'>";
+
 	if(!empty($featuredSectionList))
 	{
-		$categoryCount = 0;
+		$i = 1;
 
-		$renderHTML = "";
-		foreach($featuredSectionList as $key => $featuredSection)
+		foreach($featuredSectionList as $item)
 		{
-			if($key != 0)
+			if($i % 2 == 0)
 			{
-				$renderHTML .= "</div>";
-
-				if($categoryCount % 2)
-				{
-					$renderHTML .= "<div class='col-sm-6'>";
-				}
-				else
-				{
-					$renderHTML .= "</div><div class='row' ><div class='col-sm-6'>";
-				}
+				$renderHTML .= "<div style='margin-left:-3%' class='col-sm-6'>";
 			}
-			else 
+			else
 			{
-				$renderHTML .= "<div class='row' ><div class='col-sm-6'>";
+				$renderHTML .= "<div class='col-sm-6'>";
 			}
+			
+			$renderHTML .= "<li class='list-group-item' style='border:0px'>";
+			$renderHTML .= "<h3><b>" . $item["category"]["title"] . "</b></h3>";
+			$renderHTML .= "<div class='row'>";
+			$renderHTML .= "<div class='col-sm-4'>";
+			$renderHTML .= "<img style='border-top:1px solid #222;border-left:1px solid #222;border-bottom:1px solid #222;width:180px;height:150px' src='" . $this -> webroot . 'images/articles/' . $item["articles"][0]["a"]["photo"]. "'>";
+			$renderHTML .= "</div>";
+			$renderHTML .= "<div class='col-sm-8' style='font-size:80%;padding-top:2%;border-top:1px solid #222;border-bottom:1px solid #222;border-right:1px solid #222;padding-left:5%'>";
+			$renderHTML .= "<ul style='list-style-type:square;'>";
 
-			$renderHTML .= "<table class='table table-bordered table-hover'>";
-			$renderHTML .= "<tr class='panel-heading1 ui-sort-disabled'>";
-			$renderHTML .= "<th colspan='4' style='text-align:center;'>";
-			$renderHTML .= "<a target='_blank' style='text-decoration: none; color: #000' href='" . $this -> webroot . "categories/index/" . $featuredSection["category"]["id"] . "'>";
-			$renderHTML .= $featuredSection["category"]["title"] . "</a></th>";
-
-			$articleCount = 0;
-
-			foreach($featuredSection["articles"] as $article)
+			foreach($item["articles"] as $article)
 			{
-				$articleRow = "";
-				$articleRow .= "<tr><td>";
-				$articleRow .= "<a target='_blank' style='text-decoration: none; font-weight: 500; color: #000' href='" . $this -> webroot . "homes/article/" . $article["a"]["id"] . "'>";
-
-				if(!$articleCount && !empty($article["a"]["photo"]))
-				{
-						$articleRow .= "<figure class='figure'><img style='width: 100%; max-height: 300px;' src='" . $this -> webroot . "images/articles/" . $article["a"]["photo"] . "' class='figure-img img-fluid rounded'";
-						$articleRow .= "alt='" . $article["a"]["title"] . "'>";
-						$articleRow .= "<figcaption class='figure-caption'>" . $article["a"]["title"] . "</figcaption></figure>";
-				}
-				else 
-				{
-					$articleRow .= $article["a"]["title"];
-				}
-
-				$articleRow .= "</a></td></tr>";
-				
-
-				$renderHTML .= $articleRow;
-				$articleCount ++;
-
+				$renderHTML .= "<a style='color:#222' href='" . $this -> webroot . 'Homes/article/' . $article["a"]["id"] . "'><li>" . $article["a"]["title"] . "</li></a>";
 			}
+			
+			$renderHTML .= "</ul>";
+			$renderHTML .= "</div>";
+			$renderHTML .= "</div>";
+			$renderHTML .= "</li>";
+			$renderHTML .= "</div>";
 
-			$renderHTML .= "</tr></table>";
-										  	
-			$categoryCount += 1;
+			$i++;
 		}
-
-		if(!empty($renderHTML))
-		{
-			$renderHTML .= "</div></div>";
-		}
-
-		
-		echo $renderHTML;
 	}
+
+	$renderHTML .= "</div>";
+	$renderHTML .= "</ul>";
+
+	echo $renderHTML;
+	exit();
+
 ?>

@@ -8,13 +8,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
-		
-		::-webkit-scrollbar 
-		{ 
-    		display: none; 
-		}
+    
+    ::-webkit-scrollbar 
+    { 
+        display: none; 
+    }
 
-	</style>
+  </style>
 </head>
 
 <body style="border-top:2px solid #eee;background:#eee">

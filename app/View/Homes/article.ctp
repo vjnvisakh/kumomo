@@ -119,41 +119,39 @@
 </script>
 <div class="container-fluid">
     <!-- TITLE OF THE ARTICLE -->
-    <div id="title" class="row" style="padding-top:5%">
+    <div id="title" class="row">
         <div class="col-lg-12">
-        <h1>            
-            <?=$TITLE?>
-        </h1>        
+        <h1>
+            <b><?=$TITLE?></b>
+        </h1>
         </div>
     </div>
     
     <!-- AREA FOR THE VIEWS AND OTHER META DATA -->
-    <div id="meta" class="row">                
-        <div class="col-lg-2">
-            <small><?=date("d-M-Y",strtotime($CREATED))?></small>
-        </div>
-        <div class="col-lg-2">
-            <small><b>Views: </b>200</small>
-        </div> 
+    <div id="meta" class="row">
+        
     </div>
 
     <br/>
     <!-- AREA FOR THE PIC -->
     <div id="cover" class="row">
-        <div class="col-lg-12">        
-        <img height="500" width="950" src="<?=$this->webroot.'images/articles/'.$PIC?>" style="border:4px solid #eee;margin-bottom:2%;box-shadow:0px 1px 1px" />
+        <div class="col-lg-12">
+            <img height="375" width="500" src="<?=$this->webroot.'images/articles/'.$PIC?>" style="border:4px solid #9C5B5C;margin-left:1%;margin-right:4%;margin-bottom:3%;box-shadow:0px 1px 1px" align="left" />
+            <small><b>Published: </b><?=date("d-M-Y",strtotime($CREATED))?></small>
+            <hr style="border:1px solid #9C5B5C;width:75%;" />
+            <p style="padding-left:1%;text-align:justify;margin-top:1%"><?=$CONTENT?></p>
         </div>
     </div>
 
     <!-- AREA FOR THE TEXT -->
-    <div id="txtBox" class="row" style="padding:2%">
+    <div id="txtBox" class="row">
         <div class="col-lg-12">
             <div class="row">
-                <p style="text-align:justify">  
-                    <?=$CONTENT?>
+                <p style="text-align:justify">
+                    
                 </p>
             </div>
-            <div class="row" style="width: 20%">
+            <div class="row" style="width: 20%;padding-left:3%">
                 <div class="sharethis-inline-share-buttons"></div>
             </div>
         </div>
@@ -161,7 +159,7 @@
 
 
     <!-- RELATED NEWS -->
-    <div id="related" class="row" style="background:#eee;padding:2%;margin:0.5%">        
+    <div id="related" class="row" style="margin-top:5%;padding-left:1%">        
         <div class="col-lg-12">
             <h3>Related News</h3>
             <div id="r_news">
@@ -196,5 +194,7 @@
 
     </div>
     <!-- AREA FOR PREVIOUS COMMENTS -->    
+
+
 
 </div>
